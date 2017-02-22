@@ -43,8 +43,8 @@ todo
 
 %parse_comments(
 	input_main_file = main.sas,
-	out_file = '.\output_coder.txt',
-	out_file_scrubbed = '.\output_for_all.txt',
+	out_file = '.\output_coder.md',
+	out_file_scrubbed = '.\output_for_all.md',
 	debug_mode = 0,
 	section_aliases = work.alias_list,
 	section_order = work.order_list,
@@ -53,7 +53,7 @@ todo
 );
 
 %convert_markdown_to_html(
-	in_file_md = 'output_for_all.txt',
+	in_file_md = 'output_for_all.md',
 	out_file_html = 'output_for_all.htm',
 	debug_mode = 0
 );
