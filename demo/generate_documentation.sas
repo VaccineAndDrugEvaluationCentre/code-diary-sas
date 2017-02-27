@@ -53,8 +53,8 @@ todo
 	sections_scrubbed = work.scrub_list
 );
 
-*%convert_markdown_to_html(
-	in_file_md = $DEMO_ROOT\output-for-all.md,
-	out_file_html = $DEMO_ROOT\output-for-all.htm,
+%convert_markdown_to_html(
+	in_file_md = "&DEMO_ROOT.output-for-all.md",
+	out_file_html = "&DEMO_ROOT.output-for-all.htm",
 	debug_mode = 0
 );

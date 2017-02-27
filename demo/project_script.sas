@@ -19,7 +19,7 @@
 
 * Some code;
 
-**@stat We use alpha=0.05 in all test;
+**@stat We use alpha=0.05 in all tests;
 
 * Some code;
 

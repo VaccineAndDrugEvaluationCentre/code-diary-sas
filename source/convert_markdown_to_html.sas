@@ -17,8 +17,8 @@ Not supported is:
 * Links, images etc.
 
 # Parameters
-* in_file_md = = The input markdown file with documentation (e.g. 'C:\source\source_documentation.md')
-* out_file_html = = The output html file with documentation (e.g. 'C:\source\source_documentation.htm')
+* in_file_md = = The input markdown file with documentation (e.g. "C:\source\source_documentation.md"")
+* out_file_html = = The output html file with documentation (e.g. "C:\source\source_documentation.htm"")
 * debug_mode = Use debug mode or not [0 or 1, optional]
   
 # Final
@@ -42,7 +42,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	data _m_ds_file_source;
 		length input_line $&len_line.;
 
-		infile "&in_file_md.";
+		infile &in_file_md.;
 		input;
 
 		input_line = compress(_infile_,,'c');

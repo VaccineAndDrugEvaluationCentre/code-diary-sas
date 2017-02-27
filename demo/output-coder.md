@@ -33,7 +33,7 @@
   1.1:15 1. The Atlantic test procedures   
   1.1:16 2. The Pacific test procedures   
   1.1:17 3. The Arctic test procedures   
-* 1.1:22 We use alpha=0.05 in all test   
+* 1.1:22 We use alpha=0.05 in all tests   
     
 # Analysis   
 * 1.1:29 Use the Milkyway default analysis for grouping of people   
