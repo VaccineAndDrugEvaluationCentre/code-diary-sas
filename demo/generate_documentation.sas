@@ -1,5 +1,5 @@
-%include "parse_comments-v1_1_1.sas";
-%include "convert_markdown_to_html-v1_0_1.sas";
+%include "&MACRO_ROOT.code_diary.sas";
+%include "&MACRO_ROOT.convert_markdown_to_html.sas";
 
 * Set up workplan section style;
 data work.alias_list;
@@ -41,10 +41,11 @@ data work.scrub_list;
 todo
 ;
 
-%parse_comments(
-	input_main_file = main.sas,
-	out_file = '.\output_coder.md',
-	out_file_scrubbed = '.\output_for_all.md',
+%code_diary(
+	input_main_file = &DEMO_ROOT.project_main.sas,
+	out_dir = &DEMO_ROOT,
+	out_file = output-coder.md,
+	out_file_scrubbed = output-for-all.md,
 	debug_mode = 0,
 	section_aliases = work.alias_list,
 	section_order = work.order_list,
@@ -52,8 +53,8 @@ todo
 	sections_scrubbed = work.scrub_list
 );
 
-%convert_markdown_to_html(
-	in_file_md = 'output_for_all.md',
-	out_file_html = 'output_for_all.htm',
+*%convert_markdown_to_html(
+	in_file_md = $DEMO_ROOT\output-for-all.md,
+	out_file_html = $DEMO_ROOT\output-for-all.htm,
 	debug_mode = 0
 );

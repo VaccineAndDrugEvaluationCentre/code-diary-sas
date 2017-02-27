@@ -8,15 +8,15 @@
 */
 
 * Define folders;
-%let SOURCE_ROOT = %qsubstr(%sysget(SAS_EXECFILEPATH),1,%length(%sysget(SAS_EXECFILEPATH))-%length(%sysget(SAS_EXECFILEname)));;
-%let MACRO_ROOT = &SOURCE_ROOT;
+%let DEMO_ROOT = %qsubstr(%sysget(SAS_EXECFILEPATH),1,%length(%sysget(SAS_EXECFILEPATH))-%length(%sysget(SAS_EXECFILEname)));
+%let MACRO_ROOT = %qsubstr(&DEMO_ROOT,1,%length(&DEMO_ROOT)-5)source\;
 
 * Included scripts;
-%include "&SOURCE_ROOT\project_script.sas";
+%include "&DEMO_ROOT.project_script.sas";
 
 * Stata analysis;
 *options noxwait;
-/*x cd &SOURCE_ROOT; x '"C:\Program Files (x86)\Stata14\StataMP-64.exe" /e do "...\demo\project_stata.do"'; run;*/
+/*x cd &DEMO_ROOT; x '"C:\Program Files (x86)\Stata14\StataMP-64.exe" /e do "&DEMO_ROOT.project_stata.do"'; run;*/
 
 * Documentation;
-*%include "&SOURCE_ROOT\generate_documentation.sas";
+%include "&DEMO_ROOT.generate_documentation.sas";

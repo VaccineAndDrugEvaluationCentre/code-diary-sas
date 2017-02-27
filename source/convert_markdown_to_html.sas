@@ -1,12 +1,12 @@
 /*~
 # Summary
-Macro to convert a markdown style document to html.
+Macro to convert a markdown style document to html. This is not supposed to supplant proper tools like pandoc, but only to aid visualization on a closed system that does not allow the installation of software.
 
 # Usage
 The tool automatically creates a table of contents
 
 The tool supports the following markdown markup:
-* Metadata prefixed with %
+* Pandoc-style metadata prefixed with %
 * Headers prefixed with N # depending on the level (e.g. #### is 4th level)
 * Unordered lists prefixed with *
 * Order lists prefixed with n.
@@ -17,15 +17,13 @@ Not supported is:
 * Links, images etc.
 
 # Parameters
-* in_file_md = = The input markdown file with documentation (e.g. 'C:\source\source_documentation.txt')
+* in_file_md = = The input markdown file with documentation (e.g. 'C:\source\source_documentation.md')
 * out_file_html = = The output html file with documentation (e.g. 'C:\source\source_documentation.htm')
 * debug_mode = Use debug mode or not [0 or 1, optional]
   
-# Version history
-* v1.0.1; Christiaan Righolt, August 2016; Support for multi-line items in lists
-* v1.0.0; Christiaan Righolt, July-August 2016; Initial version
-
-Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
+# Final
+Authors: Christiaan Righolt
+Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 
 ~*/
 
