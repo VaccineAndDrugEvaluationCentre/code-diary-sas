@@ -181,8 +181,8 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		%put ERROR: The save directory &out_dir does not exist.;
 	%end;
 
-	%let out_file_path = %str(%')&out_dir&out_file%str(%');
-	%let out_file_scrubbed_path = %str(%')&out_dir&out_file_scrubbed%str(%');
+	%let out_file_path = "&out_dir&out_file";
+	%let out_file_scrubbed_path = "&out_dir&out_file_scrubbed";
 	
 	* Get original option for displaying 262 character warnings and turn it off for the duration of the macro;
 	%let original_quotelenmax_value = %sysfunc( getoption(quotelenmax) );
