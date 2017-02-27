@@ -41,8 +41,9 @@ Go to the directory in the command window and use
 		
 # Parameters	
 * input_main_file = Is the main file for the sas project tree, all files/scripts called from this main will be read recursively. (e.g P:\project\source\main.sas)
-* out_file = Is the resulting markdown file in which the results are written with script and line information. (e.g. 'P:\project\workplan_coding.txt')
-* out_file_scrubbed = Is the resulting markdown file in which the comments without script and line information is written. [Optional (e.g. 'P:\project\workplan_output.txt')]
+* out_dir = Is the output folder (e.g. P:\project\)
+* out_file = Is the resulting markdown file in which the results are written with script and line information. (e.g. workplan_coding.txt)
+* out_file_scrubbed = Is the resulting markdown file in which the comments without script and line information is written. [Optional (e.g. workplan_output.txt')]
 * debug_mode = Set to 1 to run in debug mode. (This does not delete macro data-sets for troubleshooting) [optional]
 * section_aliases = This is the dataset with keyword aliases to cause multiple keywords to map to the same section [optional]. See example for structure.
 * section_order = This is the dataset to overwrite the order of sections (all values should be negative, with the lowest order number coming first) [optional]. See example for structure.
@@ -131,26 +132,24 @@ todo
 
 %parse_comments(
 	input_main_file = &SOURCE_ROOT\main_sas.sas,
-	out_file = 'P:\et_infect\workplan_GN_ABx_coding.txt',
-	out_file_scrubbed = 'P:\et_infect\workplan_GN_ABx_output.txt',
+	out_dir = P:\project\
+	out_file = workplan_coding.txt,
+	out_file_scrubbed = workplan_output.txt,
 	section_aliases = work.alias_list,
 	section_order = work.order_list,
 	section_headers = work.header_list,
 	sections_scrubbed = work.scrub_list
 );
-	  
-# Version history
-* v1.1.1; Christiaan Righolt, August 2016; Option to include source from Stata files when the main stata do file is called from the SAS main.
-* v1.1.0; Christiaan Righolt, August 2016; Added: Custom sections and orders, option to omit sections from the scrubbed output, multi-level headers, single-line comments, multi-line comments.
-* v1.0.2; Christiaan Righolt, August 2016; Implemented documentation house style.
-* v1.0.0; Christiaan Righolt, May-July 2016; Initial version
 
-Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
+# Final
+Authors: Christiaan Righolt
+Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 
 ~*/
 
-%macro parse_comments(
+%macro code_diary(
 	input_main_file = ,
+	out_dir = ,
 	out_file = ,
 	out_file_scrubbed = '0' ,
 	debug_mode = 0,
@@ -176,26 +175,14 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 	%let len_script = 255;
 	%let len_line = 1023;
 	
-	* Check for existence of directories for output;
-	* Full file;
-	%let out_file_idx_val = %index( &out_file, %scan(&out_file, -1, '\/') );
-	%let out_file_dir = %substr( &out_file, 2, %sysevalf( &out_file_idx_val - 2) );
-	%let rc = %sysfunc( filename(fileref, &out_file_dir) );
-	
+	* Check for existence of directories for output and create actual file names;
+	%let rc = %sysfunc( filename(fileref, &out_dir) );
 	%if not %sysfunc( fexist(&fileref) ) %then %do;
-		%put ERROR: The save directory &out_file_dir does not exist.;
+		%put ERROR: The save directory &out_dir does not exist.;
 	%end;
-	
-	* Scrubbed file;
-	%if &out_file_scrubbed. ~= '0' %then %do;
-		%let out_file_scrubbed_idx_val = %index( &out_file_scrubbed, %scan(&out_file_scrubbed, -1, '\/') );
-		%let out_file_scrubbed_dir = %substr( &out_file_scrubbed, 2, %sysevalf( &out_file_scrubbed_idx_val - 2) );
-		%let rc = %sysfunc( filename(fileref, &out_file_scrubbed_dir) );
-		
-		%if not %sysfunc( fexist(&fileref) ) %then %do;
-			%put ERROR: The save directory &out_file_scrubbed_dir does not exist.;
-		%end;
-	%end;
+
+	%let out_file_path = "&out_dir&out_file";
+	%let out_file_scrubbed_path = "&out_dir&out_file_scrubbed";
 	
 	* Get original option for displaying 262 character warnings and turn it off for the duration of the macro;
 	%let original_quotelenmax_value = %sysfunc( getoption(quotelenmax) );
@@ -319,7 +306,7 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 		/* If you update this line, ALSO UPDATE THE SECOND LINE AFTER ACCORDINGLY!!!*/
 		if find(source_line, '/**') then is_comment = 1;
 		/* But escape the line above when this comment parser file is included as part of main. */
-		if find(source_line, "if find(source_line, '/**') then is_comment = 1;") then is_comment = 0;
+		if find(source_line, "if find(source_line, '/**') then is_comment = 1;") then is_comment = 0;/**/
 		
 		if use_line;
 	run;
@@ -619,14 +606,14 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 	
 	* Delete the output if it already exists;
 	* The file does not need to be opened;
-	filename fileref &out_file.;
-	%let rc = %sysfunc(fdelete(fileref));
+	filename file_cod &out_file_path.;
+	%let rc = %sysfunc(fdelete(file_cod));
 	%let _date_today = %sysfunc( putn(%sysfunc( date() ), worddate20. ));
 	
 	* Write out document information as pandoc metadata (@main :tag stuff, dates);
 	data _null_;
 
-		file &out_file. mod;
+		file &out_file_path. mod;
 		
 		* Title and version;
 		put "% "@@;
@@ -668,9 +655,9 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 	run;
 	
 	* Create scrubbed file with header if required;
-	%if &out_file_scrubbed. ~= '0' %then %do;
+	%if &out_file_scrubbed_path. ~= '0' %then %do;
 		* Delete the scrubbed output if it already exists;
-		filename file_scr &out_file_scrubbed.;
+		filename file_scr &out_file_scrubbed_path.;
 		%let rc = %sysfunc(fdelete(file_scr));
 		
 		* Copy header from coding file;
@@ -680,7 +667,7 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 	
 	* Write out included scripts;
 	data _null_;
-		file &out_file. mod;
+		file &out_file_path. mod;
 		
 		put;
 		put "# Scripts/macros used for project";
@@ -688,7 +675,7 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 	data _null_;
 		set &scripts_ds._ordered;
 		
-		file &out_file. mod;
+		file &out_file_path. mod;
 		
 		print_line = ("* " || strip(script_no) || ": " || strip(script));
 		put print_line;
@@ -721,7 +708,7 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 	data _null_;
 		set _m_ds_keyword_list;
 		
-		file &out_file. mod;
+		file &out_file_path. mod;
 		
 		section_level_minus_1 = countc(keyword, ".");
 		print_line_heading = (repeat('#', section_level_minus_1) || " " || trim(keyword_header));
@@ -748,7 +735,7 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 	data _null_;
 		set &output_lines_ds.;
 		
-		file &out_file. mod;
+		file &out_file_path. mod;
 		
 		* Print continued items with markdown code for connecting lines (two spaces) always print two spaces at end.;
 		if continued_item = 1 then put "  " @;
@@ -758,11 +745,11 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 	run;
 	
 	* Write main data to scrubbed file if required;
-	%if &out_file_scrubbed. ~= '0' %then %do;
+	%if &out_file_scrubbed_path. ~= '0' %then %do;
 		data _null_;
 			set &output_lines_ds.;
 			
-			file &out_file_scrubbed. mod;
+			file &out_file_scrubbed_path. mod;
 			* Avoid superfluous line breaks from scrubbed sections;
 			if print_line_scrubbed =: "#" then put;
 			

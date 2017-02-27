@@ -2,5 +2,8 @@
 
 /*
 @stata Stata comments can be parsed
-using the same notationg as in SAS.
+using the same notation as in SAS.
 */
+
+**@stata A one-line Stata command;
+
