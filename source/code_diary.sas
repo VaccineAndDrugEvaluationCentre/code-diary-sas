@@ -606,10 +606,8 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	
 	* Delete the output if it already exists;
 	* The file does not need to be opened;
-	%put &out_file_path.;
-	filename fileref &out_file_path.;
-	%put &out_file_path.;
-	%let rc = %sysfunc(fdelete(fileref));
+	filename file_cod &out_file_path.;
+	%let rc = %sysfunc(fdelete(file_cod));
 	%let _date_today = %sysfunc( putn(%sysfunc( date() ), worddate20. ));
 	
 	* Write out document information as pandoc metadata (@main :tag stuff, dates);
