@@ -1,5 +1,5 @@
 # Examples of usage
-This implementatino should in principle work in SAS 9.3 and up.
+This implementation should in principle work in SAS 9.3 and up.
 
 ## Code Diary
 The script project_main.sas is the main script for the demo.
