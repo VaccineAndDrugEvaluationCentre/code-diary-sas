@@ -10,14 +10,13 @@ See sample_macro_documentation for markup of files.
 * out_file_md = The output markdown file with documentation (e.g. 'C:\source\source_documentation.txt')
 * debug_mode = Use debug mode or not [0 or 1, optional]
 
-# Version history
-* v1.0.0; Christiaan Righolt, July-August 2016; Initial version
-
-Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
+# Final
+Authors: Christiaan Righolt
+Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 
 ~*/
 
-%macro parse_macros(
+%macro macro_diary(
 	source_dir = ,
 	out_file_md = ,
 	debug_mode = 0
@@ -125,7 +124,7 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 		/* If you update this line, ALSO UPDATE THE SECOND LINE AFTER ACCORDINGLY!!!*/
 		if find(source_line, '/*~') then is_comment = 1;
 		/* But escape the line above when this comment parser file is included as part of main. */
-		if find(source_line, "if find(source_line, '/*~') then is_comment = 1;") then is_comment = 0;
+		if find(source_line, "if find(source_line, '/*~') then is_comment = 1;") then is_comment = 0;/**/
 		
 		if use_line;
 	run;
@@ -208,7 +207,6 @@ Copyright (c) Vaccine and Drug Evaluation Centre, Winnipeg. All rights reserved.
 		
 		* Meta-data style for pandoc;
 		put "% SAS macro and script library";
-		put "% Vaccine and Drug Evaluation Centre (VDEC)";
 		put "% &_date_today.";
 		put;
 		

@@ -4,7 +4,6 @@ This file is a example/template for macro documentation that describes what sect
 
 # Usage
 General comments on how to use it. (e.g. macro's to call before and or after this one)
-	
 
 A list of parameters (and their meaning) used in the macro.
 * parameter_1 = First parameter

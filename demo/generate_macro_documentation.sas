@@ -1,18 +1,20 @@
-/*~
-Script to parse the macro and script documentation for the VDEC source folder
-~*/
+* Define folders;
+%let DEMO_ROOT = %qsubstr(%sysget(SAS_EXECFILEPATH),1,%length(%sysget(SAS_EXECFILEPATH))-%length(%sysget(SAS_EXECFILEname)));
+%let GIT_ROOT = %qsubstr(&DEMO_ROOT,1,%length(&DEMO_ROOT)-5);
+%let MACRO_ROOT = %qsubstr(&DEMO_ROOT,1,%length(&DEMO_ROOT)-5)source\;
 
-%include "P:\VDEC\source\documentation\parse_macros-v1_0_0.sas";
-%include "P:\VDEC\source\documentation\convert_markdown_to_html-v1_0_1.sas";
+* Includes;
+%include "&MACRO_ROOT.macro_diary.sas";
+%include "&MACRO_ROOT.convert_markdown_to_html.sas";
 
-%parse_macros(
-	source_dir = P:\VDEC\source\,
-	out_file_md = 'P:\VDEC\source\VDEC_source_documentation.txt',
+%macro_diary(
+	source_dir = &GIT_ROOT,
+	out_file_md = "&DEMO_ROOT.output-macro-documentation.md",
 	debug_mode = 0
 );
 
 %convert_markdown_to_html(
-	in_file_md = 'P:\VDEC\source\VDEC_source_documentation.txt',
-	out_file_html = 'P:\VDEC\source\VDEC_source_documentation.htm',
+	in_file_md = "&DEMO_ROOT.output-macro-documentation.md",
+	out_file_html = "&DEMO_ROOT.output-macro-documentation.htm",
 	debug_mode = 0
 );
