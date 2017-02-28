@@ -54,7 +54,6 @@ Go to the directory in the command window and use
 * There is a practical limit to the number of include files because of the creation of the dataset _includes_&curr_script_no_text. When this exceeds 32 characters it will cause an error, because of internal sas limits.
 * The maximum of several fields is hard-coded under the comment "Define character lengths" with several %let statements. Adjust these if needed for longer comments.
 * The warning<br>WARNING: The quoted string currently being processed has become more than 262 characters long. You might have unbalanced quotation marks.<br>Is turned off for the duration of the macro.
-* The header is repeated for out_file_scrubbed using the sas command fcopy. This seems to have been added in sas 9.4 and is not tested for prior versions.
 * Keyword comments are all saved in their own intermediate datasets, which need to meet SAS 32 character limit. This should not cause any issues as long as keywords are 20 chars or less. (Use section_headers entries to define longer headings in the created report.)
 
 # Example
@@ -409,7 +408,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 					call symput('tag_name', trim(tag) );
 					call symput('tagline_text', trim(tagline) );
 				
-					call execute('%let _main_&tag_name. = &tagline_text.');
+					call execute('%let _main_&tag_name = &tagline_text.');
 				end;
 			end;
 		
@@ -513,7 +512,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		call symput("iter_keyword", trim(keyword) );
 		call symput("iter_header", trim(header) );
 		
-		call execute('%let _m_order_overwrite = &_m_order_overwrite if keyword = "&iter_keyword" then keyword_header = "&iter_header."%str(;);');
+		call execute('%let _m_header_overwrite = &_m_header_overwrite if keyword = "&iter_keyword" then keyword_header = "&iter_header."%str(;);');
 	run;
 	
 	* Overwrite automatically generated properties with inputted formats;
@@ -604,55 +603,25 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		quit;');
 	run;
 	
+	* Define necessary metadata vars if needed;
+	%if not %symexist(_main_title) %then %let _main_title = Untitled;
+	%if not %symexist(_main_authors) %then %let _main_authors = Anonymous;
+	%if not %symexist(_main_org) %then %let _main_org = No organization listed;
+	%if not %symexist(_main_version) %then %let _main_version = No version listed;
+
 	* Delete the output if it already exists;
 	* The file does not need to be opened;
 	filename file_cod &out_file_path.;
 	%let rc = %sysfunc(fdelete(file_cod));
-	%let _date_today = %sysfunc( putn(%sysfunc( date() ), worddate20. ));
 	
 	* Write out document information as pandoc metadata (@main :tag stuff, dates);
-	data _null_;
-
-		file &out_file_path. mod;
-		
-		* Title and version;
-		put "% "@@;
-		%if %symexist(_main_title) %then %do;
-			put "&_main_title. "@@;
-		%end;
-		%else %do;
-			put "Untitled "@@;
-		%end;
-		
-		%if %symexist(_main_version) %then %do;
-			put "(v &_main_version.)";
-		%end;
-		%else %do;
-			put;
-		%end;
-		
-		* Authors;
-		put "% "@@;
-		
-		%if %symexist(_main_authors) %then %do;
-			put "&_main_authors."@@;
-		%end;
-		%else %do;
-			put "Anonymous "@@;
-		%end;
-		
-		* Organization;
-		%if %symexist(_main_org) %then %do;
-			put "; &_main_org.";
-		%end;
-		%else %do;
-			put;
-		%end;
-		
-		* Date;
-		put "% &_date_today.";
-		
-	run;
+	%write_metadata(
+		output_file = &out_file_path,
+		doc_title = &_main_title,
+		version = &_main_version,
+		authors = &_main_authors,
+		org = &_main_org
+	);
 	
 	* Create scrubbed file with header if required;
 	%if &out_file_scrubbed_path. ~= '0' %then %do;
@@ -660,9 +629,14 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		filename file_scr &out_file_scrubbed_path.;
 		%let rc = %sysfunc(fdelete(file_scr));
 		
-		* Copy header from coding file;
-		* Note this might only work for sas 9.4 and later;
-		%let rc = %sysfunc(fcopy(fileref,file_scr));
+		* Set up doc with pandoc metadata;
+		%write_metadata(
+			output_file = &out_file_scrubbed_path,
+			doc_title = &_main_title,
+			version = &_main_version,
+			authors = &_main_authors,
+			org = &_main_org
+		);
 	%end;
 	
 	* Write out included scripts;
@@ -933,6 +907,48 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		line_no = _N_;
 		source_line = compress(_infile_,,'c');
 
+	run;
+
+%mend;
+
+* Write metadata info to file (pandoc style);
+%macro write_metadata(
+	output_file = ,
+	doc_title = ,
+	version = ,
+	authors = ,
+	org = 
+);
+	
+	data _null_;
+		file &output_file mod;
+		
+		* Title and version;
+		put "% "@@;
+		put "&doc_title. "@@;
+
+		%if "&version" ^= "No version listed" %then %do;
+			put "(v &version)";
+		%end;
+		%else %do;
+			put;
+		%end;
+		
+		* Authors;
+		put "% "@@;
+		put "&authors."@@;
+		
+		* Organization;
+		%if "&org" ^= "No organization listed"  %then %do;
+			put "; &org";
+		%end;
+		%else %do;
+			put;
+		%end;
+		
+		* Date;
+		%let _date_today = %sysfunc( putn(%sysfunc( date() ), worddate20. ));
+		put "% &_date_today";
 	run;
 
 %mend;
