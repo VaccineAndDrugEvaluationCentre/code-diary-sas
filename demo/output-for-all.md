@@ -1,15 +1,15 @@
 % Title for output document (v 1.2.3)
 % Christiaan Righolt (CR); Vaccine and Drug Evaluation Centre (VDEC)
-% February 28, 2017
+% August 28, 2017
 
 # Exclusion criteria   
+
+## Time   
+* Exclude any record before 1960   
 
 ## Person   
 * Exclude Martians from analysis   
 * Exclude terrestial gods.   
-
-## Time   
-* Exclude any record before 1960   
 
 # Main   
 * This document is generated as an example output   

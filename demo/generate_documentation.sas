@@ -13,13 +13,15 @@ stat      statistics
 
 data work.order_list;
 	infile datalines;
-	input keyword $1-15 order_no 16-20;
+	input keyword $1-20 order_no 21-25;
 
 	datalines;
-todo           -30
-exclusion      -20
-methods        -10
-no_keyword     0
+todo                -30
+exclusion           -20
+exclusion.time      -19
+exclusion.person    -18
+methods             -10
+no_keyword          0
 ;
 
 data work.header_list;

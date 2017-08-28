@@ -1,6 +1,6 @@
 % Title for output document (v 1.2.3)
 % Christiaan Righolt (CR); Vaccine and Drug Evaluation Centre (VDEC)
-% February 28, 2017
+% August 28, 2017
 
 # Scripts/macros used for project
 * 1: C:\Users\righoltc\Documents\GitHub\code-diary-sas\demo\project_main.sas
@@ -15,12 +15,12 @@
     
 # Exclusion criteria   
     
+## Time   
+* 1.1:9 Exclude any record before 1960   
+    
 ## Person   
 * 1.1:2 Exclude Martians from analysis   
 * 1.1:3 Exclude terrestial gods.   
-    
-## Time   
-* 1.1:9 Exclude any record before 1960   
     
 # Main   
 * 1:6 This document is generated as an example output   
