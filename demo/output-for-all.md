@@ -26,6 +26,7 @@
 
 # Analysis   
 * Use the Milkyway default analysis for grouping of people   
+  The Milkyway has stars, this is a test for a multi-line two star comment   
 
 # Stata   
 * Just an example of Stata comments   

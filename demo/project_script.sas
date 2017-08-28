@@ -27,5 +27,6 @@
 
 
 **@analysis Use the Milkyway default analysis for grouping of people;
+**The Milkyway has stars, this is a test for a multi-line two star comment;
 
 * Some code;

@@ -319,7 +319,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 			line_no,
 			prxchange("&prx_grab_inline_comment.", -1, source_line) as source_line length=&len_line.,
 			script_order_no,
-			0 as continued_comment_block
+			. as continued_comment_block
 		from &all_source_ds.
 		where strip(source_line) like '**%;';
 		
@@ -370,7 +370,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	%let prx_grab_comment = 's/(.*@)([\w\.]+ )(.*)/$3/'; * Grabs the comment;
 	%let prx_grab_tag = 's/(.*:)(\w+ )(.*)/$2/'; * Grabs the tag;
 	%let prx_grab_tagline = 's/(.*:)(\w+ )(.*)/$3/'; * Grabs the tagline;
-	data _m_ds_comments_with_keywords (drop = source_line last_keyword continued_comment_block);
+	data _m_ds_comments_with_keywords (drop = source_line last_keyword continued_comment_block prev_script_order_no prev_line_no);
 		set _m_ds_source_comments_no_repeat;
 		retain last_keyword;
 		length comment $&len_line.;
@@ -379,11 +379,20 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		keyword = lowcase(prxchange(&prx_grab_keyword., -1, source_line));
 		comment = prxchange(&prx_grab_comment., -1, source_line);
 		continued_item = 0; * Only overwritten to 1 if true;
+
+		prev_script_order_no = lag(script_order_no);
+		prev_line_no = lag(line_no);
 		
-		* If there is no keyword defined, then the full line is repeated in both keyword and comment.;
-		* Either it is a continued item (so the keyword is transfered), or no keyword is provided;
+		* If there is no keyword defined, then the full line is repeated in both keyword and comment by the regular expression.;
+		* This is overwritten: Either it is a continued item (so the keyword is transfered), or no keyword is provided;
 		if keyword = lowcase(comment) then do;
-			if continued_comment_block = 1 then do;
+			* Allow continuation for either comment blocks (before |) and multiline two-star comments (after |);
+			if continued_comment_block = 1 
+					| ( 	
+						missing(continued_comment_block) 
+						& (prev_script_order_no=script_order_no) 
+						& ((prev_line_no+1)=line_no) 
+					) then do;
 				keyword = last_keyword;
 				continued_item = 1;
 			end;
