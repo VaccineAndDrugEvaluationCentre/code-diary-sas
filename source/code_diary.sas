@@ -511,7 +511,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		call symput("iter_keyword", trim(keyword) );
 		call symput("iter_order", order_no );
 		
-		call execute('%let _m_order_overwrite = &_m_order_overwrite if keyword = "&iter_keyword" then keyword_order_no = &iter_order.%str(;);');
+		call execute('%let _m_order_overwrite = &_m_order_overwrite if keyword = "&iter_keyword" then do keyword_order_no = &iter_order.%str(;) overwritten_order_no = 1 %str(;) end%str(;);');
 	run;
 	
 	%let _m_header_overwrite = ;
@@ -528,7 +528,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	data _m_ds_keyword_list;
 		set _m_ds_keyword_list;
 		
-		* Overwrite order with use-defined order for keywords;
+		* Overwrite order with user-defined order for keywords;
 		&_m_order_overwrite.
 		
 		* Create user-defined headings;
@@ -546,7 +546,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		set _m_ds_keyword_list;
 		retain last_order_no;
 
-		if not missing(keyword_parent) and (keyword_order_no > 0) then do;
+		if not missing(keyword_parent) and (not overwritten_order_no) then do;
 			keyword_order_no = last_order_no + 0.001;
 		end;
 
