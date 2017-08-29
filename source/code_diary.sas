@@ -626,10 +626,10 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	* Write out document information as pandoc metadata (@main :tag stuff, dates);
 	%write_metadata(
 		output_file = &out_file_path,
-		doc_title = &_main_title,
-		version = &_main_version,
-		authors = &_main_authors,
-		org = &_main_org
+		doc_title = %bquote(&_main_title),
+		version = %bquote(&_main_version),
+		authors = %bquote(&_main_authors),
+		org = %bquote(&_main_org)
 	);
 	
 	* Create scrubbed file with header if required;
@@ -641,10 +641,10 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		* Set up doc with pandoc metadata;
 		%write_metadata(
 			output_file = &out_file_scrubbed_path,
-			doc_title = &_main_title,
-			version = &_main_version,
-			authors = &_main_authors,
-			org = &_main_org
+			doc_title = %bquote(&_main_title),
+			version = %bquote(&_main_version),
+			authors = %bquote(&_main_authors),
+			org = %bquote(&_main_org)
 		);
 	%end;
 	

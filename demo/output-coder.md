@@ -1,6 +1,6 @@
-% Title for output document (v 1.2.3)
-% Christiaan Righolt (CR); Vaccine and Drug Evaluation Centre (VDEC)
-% August 28, 2017
+% Title for output document, just an example (v 1.2.3)
+% Christiaan Righolt, Barret Monchka, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
+% August 29, 2017
 
 # Scripts/macros used for project
 * 1: C:\Users\righoltc\Documents\GitHub\code-diary-sas\demo\project_main.sas
