@@ -29,4 +29,9 @@
 **@analysis Use the Milkyway default analysis for grouping of people;
 **The Milkyway has stars, this is a test for a multi-line two star comment;
 
+**@testing Longer, multiple line comment test;
+**This is an example of a multiple line two star SAS comment which will
+  be copied in as a single consecutive comment, it is terminated only
+  by the semicolon;
+
 * Some code;
