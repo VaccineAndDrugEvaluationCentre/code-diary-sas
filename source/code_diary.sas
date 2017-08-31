@@ -305,13 +305,15 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		/* If you update this line, ALSO UPDATE THE SECOND LINE AFTER ACCORDINGLY!!!*/
 		if find(source_line, '/**') then is_comment = 1;
 		/* But escape the line above when this comment parser file is included as part of main. */
-		if find(source_line, "if find(source_line, '/**') then is_comment = 1;") then is_comment = 0;/**/
+		if find(source_line, "if find(source_line, '/**') then is_comment = 1;") then is_comment = 0;
 		
 		if use_line;
 	run;
 	
 	* Grab the inline comments and add them to the set;
-	%let prx_grab_inline_comment = %str(s/(\*\*)(.*)(;)/$2/); * Grabs the comment;
+	%let prx_grab_inline_comment = %str(s/(\*\*)([^;]*)(;)/$2/); * Grabs the comment;
+	prx_grab_inline_comment = tranwrd(prx_grab_inline_comment,"\n"," "); * converts any newlines to spaces;
+	prx_grab_inline_comment = tranwrd(prx_grab_inline_comment,"\r"," "); * converts any linefeeds to spaces;
 	proc sql noprint;
 
 		create table _m_ds_single_line_comments as
