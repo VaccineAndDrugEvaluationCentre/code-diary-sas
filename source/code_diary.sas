@@ -275,7 +275,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		where script_no in (select old_script_no from &scripts_ds._repeated);
 
 	quit;
-	
+
 	* Add repeated scripts to ordered set;
 	data &scripts_ds._ordered;
 		set &scripts_ds._ordered &scripts_ds._rep_unique;
@@ -291,29 +291,41 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		set &all_source_ds.;
 		retain is_comment use_line;
 		by script_order_no;
-		
+
+                /*
+                 * regexes to help obtain multi-line comments
+                 */
+		slash_two_asterix_reg = prxparse('/^\/\*\*/');
+		two_asterix_reg = prxparse('/^\*\*/');
+		semicolon_reg = prxparse('/;$/');
+		one_asterix_slash_reg = prxparse('/\*\//');
+
 		* Only a continued comment block if it is the second line in the block (put it before use_line is defined);
 		if use_line = 1 then continued_comment_block = 1;
 		else continued_comment_block = 0;
-		
+
+		* skip the first;
 		if first.script_no then is_comment = 0;
-		if find(source_line, '*/') then is_comment = 0;
-		
+
+		* if this then the multi-line comment is over;
+		if prxmatch(one_asterix_slash_reg, source_line) ^= 0 then is_comment = 0;
+
+		* handle cases with two asterix comments of multi-lines;
+		if prxmatch(two_asterix_reg, source_line) ^= 0 then is_comment = 1;
+		if prxmatch(semicolon_reg, source_line) ^= 0 then is_comment = 0;
+		if prxmatch('/^\*[^\*]/', source_line) ^= 0 then is_comment = 0;
+
 		if is_comment then use_line = 1;
 		else use_line = 0;
-		
-		/* If you update this line, ALSO UPDATE THE SECOND LINE AFTER ACCORDINGLY!!!*/
-		if find(source_line, '/**') then is_comment = 1;
-		/* But escape the line above when this comment parser file is included as part of main. */
-		if find(source_line, "if find(source_line, '/**') then is_comment = 1;") then is_comment = 0;
-		
+
+		* if this then the multi-line comment has started;
+		if prxmatch(slash_two_asterix_reg, source_line) ^= 0 then is_comment = 1;
+
 		if use_line;
 	run;
-	
+
 	* Grab the inline comments and add them to the set;
-	%let prx_grab_inline_comment = %str(s/(\*\*)([^;]*)(;)/$2/); * Grabs the comment;
-	prx_grab_inline_comment = tranwrd(prx_grab_inline_comment,"\n"," "); * converts any newlines to spaces;
-	prx_grab_inline_comment = tranwrd(prx_grab_inline_comment,"\r"," "); * converts any linefeeds to spaces;
+	%let prx_grab_inline_comment = %str(s/\*\*([^;]*);/$1/); * Grabs the comment;
 	proc sql noprint;
 
 		create table _m_ds_single_line_comments as
@@ -330,7 +342,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		from _m_ds_single_line_comments;
 
 	quit;
-	
+
 	* Remove repeated comments from including the same file multiple times;
 	* Rename script number, and only use first occurence;
 	proc sql noprint;
