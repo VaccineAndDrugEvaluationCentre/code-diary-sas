@@ -307,6 +307,10 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		* skip the first;
 		if first.script_no then is_comment = 0;
 
+		* if starts with "slash-two-asterix-then-at" AND ends with "asterix-slash";
+		* then convert it to a normal starting "two-star" line;
+		source_line = prxchange('s/^.*;?\s{0,4}\/\*\*\@(.+)\*\//\*\*\@$1;/', -1, source_line);
+
 		* if this then the multi-line comment is over;
 		if prxmatch(one_asterix_slash_reg, source_line) ^= 0 then is_comment = 0;
 
@@ -325,7 +329,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		if prxmatch(slash_one_asterix_reg, source_line) ^= 0 then use_line = 0;
 
 		* if the "source_line" ends with a semicolon, strip it out;
-		source_line = prxchange('s/;[^\w]+$//', -1, source_line);
+		source_line = prxchange('s/;[^\w]*$//', -1, source_line);
 
 		* if the "source_line" starts with two asterix chars, trim them away;
 		source_line = prxchange('s/^\*\*//', -1, source_line);
