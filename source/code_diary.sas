@@ -292,15 +292,15 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		retain is_comment use_line;
 		by script_order_no;
 
-                /*
-                 * regexes to help obtain multi-line comments
-                 */
-		slash_two_asterix_reg = prxparse('/^\/\*\*/');
-		two_asterix_reg = prxparse('/^\*\*/');
+		* regexes to help obtain multi-line comments;
+		slash_two_asterix_reg = prxparse('/^\s{0,4}\/\*\*/');
+		slash_one_asterix_reg = prxparse('/^\s{0,4}\/\*[^\*]/');
+		two_asterix_reg = prxparse('/^\s{0,4}\*\*/');
 		semicolon_reg = prxparse('/;$/');
-		one_asterix_slash_reg = prxparse('/\*\//');
+		one_asterix_slash_reg = prxparse('/\s{0,4}\*\//');
 
-		* Only a continued comment block if it is the second line in the block (put it before use_line is defined);
+		* only a continued comment block if it is the second line in the block;
+		* put it before use_line is defined;
 		if use_line = 1 then continued_comment_block = 1;
 		else continued_comment_block = 0;
 
@@ -313,19 +313,30 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		* handle cases with two asterix comments of multi-lines;
 		if prxmatch(two_asterix_reg, source_line) ^= 0 then is_comment = 1;
 		if prxmatch(semicolon_reg, source_line) ^= 0 then is_comment = 0;
-		if prxmatch('/^\*[^\*]/', source_line) ^= 0 then is_comment = 0;
+		if prxmatch('/^\s{0,16}\*[^\*]/', source_line) ^= 0 then is_comment = 0;
 
+		* set the "use_line" flag based on whether or not this has been deemed;
+		* to sufficiently resemble a SAS comment;
 		if is_comment then use_line = 1;
 		else use_line = 0;
 
 		* if this then the multi-line comment has started;
 		if prxmatch(slash_two_asterix_reg, source_line) ^= 0 then is_comment = 1;
+		if prxmatch(slash_one_asterix_reg, source_line) ^= 0 then use_line = 0;
 
+		* if the "source_line" ends with a semicolon, strip it out;
+		source_line = prxchange('s/;[^\w]+$//', -1, source_line);
+
+		* if the "source_line" starts with two asterix chars, trim them away;
+		source_line = prxchange('s/^\*\*//', -1, source_line);
+
+		* append the "source_line" variable to the dataset if the "use_line" flag
+		* has been set to 1;
 		if use_line;
 	run;
 
 	* Grab the inline comments and add them to the set;
-	%let prx_grab_inline_comment = %str(s/\*\*([^;]*);/$1/); * Grabs the comment;
+	%let prx_grab_inline_comment = %str(s/\*\*([^;]+);/$1/); * Grabs the comment;
 	proc sql noprint;
 
 		create table _m_ds_single_line_comments as
@@ -380,10 +391,10 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	
 	* Extract keywords, comments;
 	* Extract the special @main :tag keywords as well;
-	%let prx_grab_keyword = 's/(.*@)([\w\.]+ )(.*)/$2/'; * Grabs the keyword;
-	%let prx_grab_comment = 's/(.*@)([\w\.]+ )(.*)/$3/'; * Grabs the comment;
-	%let prx_grab_tag = 's/(.*:)(\w+ )(.*)/$2/'; * Grabs the tag;
-	%let prx_grab_tagline = 's/(.*:)(\w+ )(.*)/$3/'; * Grabs the tagline;
+	%let prx_grab_keyword = 's/.*@([\w\.]+ ).*/$1/'; * Grabs the keyword;
+	%let prx_grab_comment = 's/.*@[\w\.]+ (.*)/$1/'; * Grabs the comment;
+	%let prx_grab_tag = 's/.*:(\w+ ).*/$1/'; * Grabs the tag;
+	%let prx_grab_tagline = 's/.*:\w+ (.*)/$1/'; * Grabs the tagline;
 	data _m_ds_comments_with_keywords (drop = source_line last_keyword continued_comment_block prev_script_order_no prev_line_no);
 		set _m_ds_source_comments_no_repeat;
 		retain last_keyword;
