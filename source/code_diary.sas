@@ -747,9 +747,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		
 		* Print continued items with markdown code for connecting lines (two spaces) always print two spaces at end.;
 		if continued_item = 1 then put "  " @;
-		put print_line @;
-		put "  ";
-		
+		put print_line;
 	run;
 	
 	* Write main data to scrubbed file if required;
@@ -764,8 +762,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 			* Print continued items with markdown code for connecting lines (two spaces) always print two spaces at end.;
 			if not missing(print_line_scrubbed) then do;
 				if continued_item = 1 then put "  " @;
-				put print_line_scrubbed  @;
-				put "  ";
+				put print_line_scrubbed;
 			end;
 		run;
 	%end;
