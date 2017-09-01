@@ -27,11 +27,17 @@
 
 
 **@analysis Use the Milkyway default analysis for grouping of people;
-**The Milkyway has stars, this is a test for a multi-line two star comment;
+**The Milkyway has stars, this is a test for a single-line two star that is appended to the above in markdown / HTML;
+
+**@regex Essential definitions for the text-parsing regex.;
+* Additional code that defines a number of useful regexes, this should *not* be parsed *nor* appear;
 
 **@testing Longer, multiple line comment test;
-**This is an example of a multiple line two star SAS comment which will
+**This is an example of a multiple-line two star SAS comment which will
   be copied in as a single consecutive comment, it is terminated only
   by the semicolon;
 
-* Some code;
+/**@finalization How the end product will be determined: */
+* The above is designed to account for how SAS handles slash-two-asterix *at* comments;
+
+* Some more code, nothing too fancy...;
