@@ -457,8 +457,8 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	* Get list of unique keywords in source and their order of appearance;
 	* Change _ to space for header;
 	%let prx_underscore_to_space = 's/_/ /';
-	%let prx_grab_keyword_parent = 's/(.*)(\.)(\w+)/$1/'; * Grabs the parent of the key word, e.g. section.header.paragraph --> section.header;
-	%let prx_grab_keyword_lowest_level = 's/(.*)(\.)(\w+)/$3/'; * Grabs the lowest level of the key word, e.g. section.header.paragraph --> paragraph;
+	%let prx_grab_keyword_parent = 's/(.*)\.\w+/$1/'; * Grabs the parent of the key word, e.g. section.header.paragraph --> section.header;
+	%let prx_grab_keyword_lowest_level = 's/.*\.(\w+)/$1/'; * Grabs the lowest level of the key word, e.g. section.header.paragraph --> paragraph;
 	proc sql noprint;
 
 		create table _m_ds_keyword_list as
