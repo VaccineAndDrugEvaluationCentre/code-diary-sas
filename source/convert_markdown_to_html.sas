@@ -273,7 +273,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		end;
 		
 		file &out_file_html mod;
-		
+
 		* Open/close lists if needed;
 		if (not active_ol) and (markup_type = 'ol') then do;
 			active_ol = 1;
@@ -295,23 +295,34 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		
 		* Get html markup for the line;
 		if markup_type =: 'h' then do;
-			print_line = ( "<" || strip(markup_type) || ' id="' || lowcase(prxchange(&prx_toc_tag., -1, strip(clean_text))) || strip(put(line_no, best12.)) || '">' || strip(clean_text) || "</" || strip(markup_type)  || ">" );
+		    print_line = ( "<" || strip(markup_type) || ' id="'
+		      || lowcase(prxchange(&prx_toc_tag., -1, strip(clean_text)))
+		      || strip(put(line_no, best12.)) || '">'
+		      || strip(clean_text) || "</" || strip(markup_type) || ">" );
 		end;
+
+		* handle ordered and unordered lists;
 		else if (markup_type = 'ol') or (markup_type = 'ul') then do;
-			if continue_to_next = 1 then print_line = ( "<li>" || strip(clean_text) || "</li><br>" );
-			else print_line = ( "<li>" || strip(clean_text) || "</li>" );
+
+		    * multi-line def comment starts here;
+		    if continue_to_next = 1 then do;
+		        print_line = ( "<li>" || strip(clean_text) || "</li><br>" );
+		    end;
+
+		    * title of multi-line paragraph, or single-line important comment;
+		    else print_line = ( "<li>" || strip(clean_text) || "</li>" );
 		end;
-		else do;
-			print_line = ( strip(clean_text) || "<br>" );
-		end;
+
+		* handle plain-text lines;
+		else print_line = ( strip(clean_text) || "<br>" );
 		
 		* Print line;
 		put print_line;
 		
 		* Close lists that did not close at end;
 		if _N_ = &n_obs_body_data then do;
-			if active_ol then put '</ol>';
-			if active_ul then put '</ul>';
+                    if active_ol then put '</ol>';
+                    if active_ul then put '</ul>';
 		end;
 		
 	run;
