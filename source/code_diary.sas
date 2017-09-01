@@ -287,6 +287,9 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	* "*/" turns it off for this line;
 	* First line of a script will be off;
 	* Need two temp parameters to work, because of order of commands and retain statement;
+	*;
+	* NOTE: Further documentation regarding the complex regexes use in this section are
+	*       detailed in the project README.md in the root of this repo.;
 	data _m_ds_source_comments (drop = is_comment use_line);
 		set &all_source_ds.;
 		retain is_comment use_line;

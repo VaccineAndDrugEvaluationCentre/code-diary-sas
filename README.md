@@ -57,6 +57,37 @@ Ideally, testing ought to be done everytime the source code for this project
 has been changed. It is recommended that multiple team members conduct
 quality assurance since SAS code and comments tend to be very non-standard.
 
+## Notes regarding the Code Diary regex
+
+In the code_diary.sas program, a number of complex regexes are used to
+extract data from each line of code and determine the different types of
+comments are that permitted in SAS code.
+
+For any future programmers who may have difficulty understanding why they
+were used as such, documentation concerning them is provided below:
+
+i) Search for `/** detailed comment regarding code` comments.
+
+`/^\s{0,4}\/\*\*/`
+
+ii) Search for starting `/*` of multi-line comments.
+
+`/^\s{0,4}\/\*[^\*]/`
+
+iii) Search for ending `*/` of multi-line comments.
+
+`/\s{0,4}\*\//`
+
+iv) Find all of the `/**@subheader This is a description. */` comments,
+    both single-line and inline variants.
+
+`s/^.*;?\s{0,4}\/\*\*\@(.+)\*\//\*\*\@$1;/`
+
+v) Look for the two-star variant SAS comments, during the SQL stage, and
+   extract the comment contents.
+
+`s/\*\*([^;]+);/$1/`
+
 ## Additional Notes
 
 See the files in the [**demo**](https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/tree/master/demo)
