@@ -290,7 +290,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	*;
 	* NOTE: Further documentation regarding the complex regexes use in this section are
 	*       detailed in the project README.md in the root of this repo.;
-	data _m_ds_source_comments (drop = is_comment use_line);
+	data _m_ds_source_comments (drop = is_comment use_line slash_one_asterix_reg slash_two_asterix_reg two_asterix_reg semicolon_reg one_asterix_slash_reg);
 		set &all_source_ds.;
 		retain is_comment use_line;
 		by script_order_no;
@@ -341,25 +341,6 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		* has been set to 1;
 		if use_line;
 	run;
-
-	* Grab the inline comments and add them to the set;
-	%let prx_grab_inline_comment = %str(s/\*\*([^;]+);/$1/); * Grabs the comment;
-	proc sql noprint;
-
-		create table _m_ds_single_line_comments as
-		select script_no,
-			line_no,
-			prxchange("&prx_grab_inline_comment.", -1, source_line) as source_line length=&len_line.,
-			script_order_no,
-			. as continued_comment_block
-		from &all_source_ds.
-		where strip(source_line) like '**%;';
-		
-		insert into _m_ds_source_comments
-		select *
-		from _m_ds_single_line_comments;
-
-	quit;
 
 	* Remove repeated comments from including the same file multiple times;
 	* Rename script number, and only use first occurence;
