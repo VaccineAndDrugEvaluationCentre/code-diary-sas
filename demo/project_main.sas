@@ -1,6 +1,6 @@
 /**
 @main :title Title for output document, just an example
-@main :authors Christiaan Righolt, Barret Monchka, Salah Mahmud
+@main :authors Christiaan Righolt, Barret Monchka, Robert Bisewski, Salah Mahmud
 @main :org Vaccine and Drug Evaluation Centre (VDEC)
 @main :version 1.2.3
 @main This document is generated as an example output

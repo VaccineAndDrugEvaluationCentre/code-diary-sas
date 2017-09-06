@@ -275,7 +275,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		where script_no in (select old_script_no from &scripts_ds._repeated);
 
 	quit;
-	
+
 	* Add repeated scripts to ordered set;
 	data &scripts_ds._ordered;
 		set &scripts_ds._ordered &scripts_ds._rep_unique;
@@ -287,31 +287,63 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	* "*/" turns it off for this line;
 	* First line of a script will be off;
 	* Need two temp parameters to work, because of order of commands and retain statement;
+	*;
+	* NOTE: Further documentation regarding the complex regexes use in this section are
+	*       detailed in the project README.md in the root of this repo.;
 	data _m_ds_source_comments (drop = is_comment use_line);
 		set &all_source_ds.;
 		retain is_comment use_line;
 		by script_order_no;
-		
-		* Only a continued comment block if it is the second line in the block (put it before use_line is defined);
+
+		* regexes to help obtain multi-line comments;
+		slash_two_asterix_reg = prxparse('/^\s{0,4}\/\*\*/');
+		slash_one_asterix_reg = prxparse('/^\s{0,4}\/\*[^\*]/');
+		two_asterix_reg = prxparse('/^\s{0,4}\*\*/');
+		semicolon_reg = prxparse('/;$/');
+		one_asterix_slash_reg = prxparse('/\s{0,4}\*\//');
+
+		* only a continued comment block if it is the second line in the block;
+		* put it before use_line is defined;
 		if use_line = 1 then continued_comment_block = 1;
 		else continued_comment_block = 0;
-		
+
+		* skip the first;
 		if first.script_no then is_comment = 0;
-		if find(source_line, '*/') then is_comment = 0;
-		
+
+		* if starts with "slash-two-asterix-then-at" AND ends with "asterix-slash";
+		* then convert it to a normal starting "two-star" line;
+		source_line = prxchange('s/^.*;?\s{0,4}\/\*\*\@(.+)\*\//\*\*\@$1;/', -1, source_line);
+
+		* if this then the multi-line comment is over;
+		if prxmatch(one_asterix_slash_reg, source_line) ^= 0 then is_comment = 0;
+
+		* handle cases with two asterix comments of multi-lines;
+		if prxmatch(two_asterix_reg, source_line) ^= 0 then is_comment = 1;
+		if prxmatch(semicolon_reg, source_line) ^= 0 then is_comment = 0;
+		if prxmatch('/^\s{0,16}\*[^\*]/', source_line) ^= 0 then is_comment = 0;
+
+		* set the "use_line" flag based on whether or not this has been deemed;
+		* to sufficiently resemble a SAS comment;
 		if is_comment then use_line = 1;
 		else use_line = 0;
-		
-		/* If you update this line, ALSO UPDATE THE SECOND LINE AFTER ACCORDINGLY!!!*/
-		if find(source_line, '/**') then is_comment = 1;
-		/* But escape the line above when this comment parser file is included as part of main. */
-		if find(source_line, "if find(source_line, '/**') then is_comment = 1;") then is_comment = 0;/**/
-		
+
+		* if this then the multi-line comment has started;
+		if prxmatch(slash_two_asterix_reg, source_line) ^= 0 then is_comment = 1;
+		if prxmatch(slash_one_asterix_reg, source_line) ^= 0 then use_line = 0;
+
+		* if the "source_line" ends with a semicolon, strip it out;
+		source_line = prxchange('s/;[^\w]*$//', -1, source_line);
+
+		* if the "source_line" starts with two asterix chars, trim them away;
+		source_line = prxchange('s/^\*\*//', -1, source_line);
+
+		* append the "source_line" variable to the dataset if the "use_line" flag
+		* has been set to 1;
 		if use_line;
 	run;
-	
+
 	* Grab the inline comments and add them to the set;
-	%let prx_grab_inline_comment = %str(s/(\*\*)(.*)(;)/$2/); * Grabs the comment;
+	%let prx_grab_inline_comment = %str(s/\*\*([^;]+);/$1/); * Grabs the comment;
 	proc sql noprint;
 
 		create table _m_ds_single_line_comments as
@@ -328,7 +360,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		from _m_ds_single_line_comments;
 
 	quit;
-	
+
 	* Remove repeated comments from including the same file multiple times;
 	* Rename script number, and only use first occurence;
 	proc sql noprint;
@@ -366,10 +398,10 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	
 	* Extract keywords, comments;
 	* Extract the special @main :tag keywords as well;
-	%let prx_grab_keyword = 's/(.*@)([\w\.]+ )(.*)/$2/'; * Grabs the keyword;
-	%let prx_grab_comment = 's/(.*@)([\w\.]+ )(.*)/$3/'; * Grabs the comment;
-	%let prx_grab_tag = 's/(.*:)(\w+ )(.*)/$2/'; * Grabs the tag;
-	%let prx_grab_tagline = 's/(.*:)(\w+ )(.*)/$3/'; * Grabs the tagline;
+	%let prx_grab_keyword = 's/.*@([\w\.]+ ).*/$1/'; * Grabs the keyword;
+	%let prx_grab_comment = 's/.*@[\w\.]+ (.*)/$1/'; * Grabs the comment;
+	%let prx_grab_tag = 's/.*:(\w+ ).*/$1/'; * Grabs the tag;
+	%let prx_grab_tagline = 's/.*:\w+ (.*)/$1/'; * Grabs the tagline;
 	data _m_ds_comments_with_keywords (drop = source_line last_keyword continued_comment_block prev_script_order_no prev_line_no);
 		set _m_ds_source_comments_no_repeat;
 		retain last_keyword;
@@ -432,8 +464,8 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	* Get list of unique keywords in source and their order of appearance;
 	* Change _ to space for header;
 	%let prx_underscore_to_space = 's/_/ /';
-	%let prx_grab_keyword_parent = 's/(.*)(\.)(\w+)/$1/'; * Grabs the parent of the key word, e.g. section.header.paragraph --> section.header;
-	%let prx_grab_keyword_lowest_level = 's/(.*)(\.)(\w+)/$3/'; * Grabs the lowest level of the key word, e.g. section.header.paragraph --> paragraph;
+	%let prx_grab_keyword_parent = 's/(.*)\.\w+/$1/'; * Grabs the parent of the key word, e.g. section.header.paragraph --> section.header;
+	%let prx_grab_keyword_lowest_level = 's/.*\.(\w+)/$1/'; * Grabs the lowest level of the key word, e.g. section.header.paragraph --> paragraph;
 	proc sql noprint;
 
 		create table _m_ds_keyword_list as
@@ -722,9 +754,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		
 		* Print continued items with markdown code for connecting lines (two spaces) always print two spaces at end.;
 		if continued_item = 1 then put "  " @;
-		put print_line @;
-		put "  ";
-		
+		put print_line;
 	run;
 	
 	* Write main data to scrubbed file if required;
@@ -739,8 +769,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 			* Print continued items with markdown code for connecting lines (two spaces) always print two spaces at end.;
 			if not missing(print_line_scrubbed) then do;
 				if continued_item = 1 then put "  " @;
-				put print_line_scrubbed  @;
-				put "  ";
+				put print_line_scrubbed;
 			end;
 		run;
 	%end;
