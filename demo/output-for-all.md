@@ -9,7 +9,15 @@
 
 ## Person
 * Exclude Martians from analysis
-* Exclude terrestial gods.
+* Exclude terrestrial gods.
+
+# No keyword
+* Special comment inside block comments
+  /**Same line special block comment B
+  Different line special line comment A
+  Different line special line comment B
+  Different line special line comment C
+  data /**A tricky special
 
 # Main
 * This document is generated as an example output

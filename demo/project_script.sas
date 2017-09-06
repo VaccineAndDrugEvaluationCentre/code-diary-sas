@@ -1,6 +1,40 @@
+/*
+Just a regular block comment, should not be parsed 
+*/
+
+/* Inline block comment */
+
+/*
+Block comments
+**Special comment inside block comments;
+*/
+
+/**Same line special block comment A*/
+
+/**Same line special block comment B
+*/
+
+/**
+Same line special block comment C*/
+
+**
+Different line special line comment A
+;
+
+**Different line special line comment B
+;
+
+**
+Different line special line comment C;
+
+data /**A tricky special
+  comment (not currently implemented)*/ _null_;
+  var_one = 1; **A special comment inside a data step (not currently implemented);
+run;
+
 /**
 @excl.person Exclude Martians from analysis
-@excl.person Exclude terrestial gods.
+@excl.person Exclude terrestrial gods.
 */
 
 * Some code;
