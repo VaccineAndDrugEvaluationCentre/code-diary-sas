@@ -1,6 +1,6 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Barret Monchka, Robert Bisewski, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% September 6, 2017
+% November 2, 2017
 
 # Scripts/macros used for project
 * 1: C:\Users\righoltc\Documents\GitHub\code-diary-sas\demo\project_main.sas
@@ -23,12 +23,12 @@
 * 1.1:37 Exclude terrestrial gods.
  
 # No keyword
-* 1.1:9 Special comment inside block comments
-  1.1:14 /**Same line special block comment B
-  1.1:21 Different line special line comment A
-  1.1:24 Different line special line comment B
-  1.1:28 Different line special line comment C
-  1.1:30 data /**A tricky special
+* 1.1:9 Code Diary comment inside block comments
+  1.1:14 /**Same line Code Diary block comment B
+  1.1:21 Different line Code Diary line comment A
+  1.1:24 Different line Code Diary line comment B
+  1.1:28 Different line Code Diary line comment C
+  1.1:30 data /**A tricky Code Diary
  
 # Main
 * 1:6 This document is generated as an example output

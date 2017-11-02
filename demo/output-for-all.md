@@ -1,6 +1,6 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Barret Monchka, Robert Bisewski, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% September 6, 2017
+% November 2, 2017
 
 # Exclusion criteria
 
@@ -12,12 +12,12 @@
 * Exclude terrestrial gods.
 
 # No keyword
-* Special comment inside block comments
-  /**Same line special block comment B
-  Different line special line comment A
-  Different line special line comment B
-  Different line special line comment C
-  data /**A tricky special
+* Code Diary comment inside block comments
+  /**Same line Code Diary block comment B
+  Different line Code Diary line comment A
+  Different line Code Diary line comment B
+  Different line Code Diary line comment C
+  data /**A tricky Code Diary
 
 # Main
 * This document is generated as an example output
