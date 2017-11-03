@@ -312,15 +312,16 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 
 		* if starts with "slash-two-asterix-then-at" AND ends with "asterix-slash";
 		* then convert it to a normal starting "two-star" line;
-		source_line = prxchange('s/^.*;?\s{0,4}\/\*\*\@(.+)\*\//\*\*\@$1;/', -1, source_line);
+		source_line = prxchange('s/.*;?\s{0,4}\/\*\*\@(.+)\*\//\*\*\@$1;/', -1, source_line);
 
-		* if this then the multi-line comment is over;
-		if prxmatch(one_asterix_slash_reg, source_line) ^= 0 then is_comment = 0;
+		* if the multi-line comment ending with star-slash is on-going;
+		if prxmatch(one_asterix_slash_reg, source_line) ^= 0 then is_comment = 1;
 
 		* handle cases with two asterix comments of multi-lines;
 		if prxmatch(two_asterix_reg, source_line) ^= 0 then is_comment = 1;
 		if prxmatch(semicolon_reg, source_line) ^= 0 then is_comment = 0;
 		if prxmatch('/^\s{0,16}\*[^\*]/', source_line) ^= 0 then is_comment = 0;
+		if prxmatch(slash_two_asterix_reg, source_line) ^= 0 then is_comment = 1;
 
 		* set the "use_line" flag based on whether or not this has been deemed;
 		* to sufficiently resemble a SAS comment;
@@ -328,14 +329,22 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		else use_line = 0;
 
 		* if this then the multi-line comment has started;
-		if prxmatch(slash_two_asterix_reg, source_line) ^= 0 then is_comment = 1;
 		if prxmatch(slash_one_asterix_reg, source_line) ^= 0 then use_line = 0;
 
 		* if the "source_line" ends with a semicolon, strip it out;
 		source_line = prxchange('s/;[^\w]*$//', -1, source_line);
 
-		* if the "source_line" starts with two asterix chars, trim them away;
-		source_line = prxchange('s/^\*\*//', -1, source_line);
+		* if the "source_line" starts with two asterix chars (with or;
+		* without a slash), trim them away. This is done so that only;
+		* text content (and not surplus asterix chars) are recorded;
+		source_line = prxchange('s/^\s{0,4}\/?\*\*\s{0,4}//', -1, source_line);
+
+		* trim away any ending asterix-slash characters, and;
+		* terminate the multiline comment;
+		if prxmatch('/\s{0,4}\*\/.*/', source_line) ^= 0 then do;
+			source_line = prxchange('s/\s{0,4}\*\/.*//', -1, source_line);
+			is_comment = 0;
+		end;
 
 		* append the "source_line" variable to the dataset if the "use_line" flag
 		* has been set to 1;
