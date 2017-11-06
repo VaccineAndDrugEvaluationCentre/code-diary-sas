@@ -1,6 +1,6 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Barret Monchka, Robert Bisewski, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% November 2, 2017
+% November 6, 2017
 
 # Scripts/macros used for project
 * 1: C:\Users\righoltc\Documents\GitHub\code-diary-sas\demo\project_main.sas
@@ -24,11 +24,20 @@
  
 # No keyword
 * 1.1:9 Code Diary comment inside block comments
-  1.1:14 /**Same line Code Diary block comment B
+* 1.1:12 Same line Code Diary block comment A
+* 1.1:14 Same line Code Diary block comment B
+  1.1:18 Same line Code Diary block comment C
   1.1:21 Different line Code Diary line comment A
   1.1:24 Different line Code Diary line comment B
   1.1:28 Different line Code Diary line comment C
   1.1:30 data /**A tricky Code Diary
+  1.1:31 comment (partially supported)
+* 1.2.1:147 ~
+* 1.2.1:299 slash_two_asterix_reg = prxparse('/^\s{0,4}\/\*\
+* 1.2.1:301 two_asterix_reg = prxparse('/^\s{0,4}\*\
+* 1.2.1:344 if prxmatch('/\s{0,4}\*\/.
+  1.2.1:345 source_line = prxchange('s/\s{0,4}\*\/.
+* 1.2.2:28 ~
  
 # Main
 * 1:6 This document is generated as an example output

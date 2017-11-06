@@ -9,13 +9,13 @@ Block comments
 **Code Diary comment inside block comments;
 */
 
-/**Same line Code Diary block comment A (not implemented)*/
+/**Same line Code Diary block comment A*/
 
 /**Same line Code Diary block comment B
 */
 
 /**
-Same line Code Diary block comment C (not implemented)*/
+Same line Code Diary block comment C*/
 
 **
 Different line Code Diary line comment A
@@ -28,7 +28,7 @@ Different line Code Diary line comment A
 Different line Code Diary line comment C;
 
 data /**A tricky Code Diary
-  comment (not supported)*/ _null_;
+  comment (partially supported)*/ _null_;
   var_one = 1; **A Code Diary comment after code (not supported);
 run;
 

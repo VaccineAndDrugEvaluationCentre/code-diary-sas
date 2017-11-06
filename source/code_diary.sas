@@ -9,9 +9,9 @@
 # Usage
 ## Comment block
 The main file and included scripts need to incorporate specially formatted comment blocks to be included in the output file. An example is:
-The special comment block is opened with:/**
-The special comment block is closed with:*/
-/*
+The special comment block is opened with (drop the spaces inbetween): / * *
+The special comment block is closed with (drop the spaces inbetween): * /
+
 An example of use inside the blocks is:
 @main :title The best documentation ever
 @main :authors Author One; Author Two; Author Three

@@ -10,7 +10,7 @@
 <div id="header">
 <h1 class="title-data">Title for output document, just an example (v 1.2.3)</h1>
 <h2 class="title-data">Christiaan Righolt, Barret Monchka, Robert Bisewski, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)</h2>
-<h2 class="title-data">November 2, 2017</h2>
+<h2 class="title-data">November 6, 2017</h2>
 </div>
 <div id="TOC">
 <ul class="toc">
@@ -20,15 +20,15 @@
 <li class="toc_line"><a href="#person10">Person</a></li>
 </ul>
 <li class="toc_line"><a href="#no_keyword14">No keyword</a></li>
-<li class="toc_line"><a href="#main22">Main</a></li>
-<li class="toc_line"><a href="#def25">Def</a></li>
-<li class="toc_line"><a href="#statistics28">Statistics</a></li>
-<li class="toc_line"><a href="#analysis35">Analysis</a></li>
-<li class="toc_line"><a href="#regex39">Regex</a></li>
-<li class="toc_line"><a href="#testing42">Testing</a></li>
-<li class="toc_line"><a href="#staging48">Staging</a></li>
-<li class="toc_line"><a href="#finalization51">Finalization</a></li>
-<li class="toc_line"><a href="#stata54">Stata</a></li>
+<li class="toc_line"><a href="#main31">Main</a></li>
+<li class="toc_line"><a href="#def34">Def</a></li>
+<li class="toc_line"><a href="#statistics37">Statistics</a></li>
+<li class="toc_line"><a href="#analysis44">Analysis</a></li>
+<li class="toc_line"><a href="#regex48">Regex</a></li>
+<li class="toc_line"><a href="#testing51">Testing</a></li>
+<li class="toc_line"><a href="#staging57">Staging</a></li>
+<li class="toc_line"><a href="#finalization60">Finalization</a></li>
+<li class="toc_line"><a href="#stata63">Stata</a></li>
 </ul>
 </div>
 <h1 id="exclusion_criteria5">Exclusion criteria</h1>
@@ -43,22 +43,31 @@
 </ul>
 <h1 id="no_keyword14">No keyword</h1>
 <ul>
-<li>Code Diary comment inside block comments</li><br>
-/**Same line Code Diary block comment B<br>
+<li>Code Diary comment inside block comments</li>
+<li>Same line Code Diary block comment A</li>
+<li>Same line Code Diary block comment B</li><br>
+Same line Code Diary block comment C<br>
 Different line Code Diary line comment A<br>
 Different line Code Diary line comment B<br>
 Different line Code Diary line comment C<br>
 data /**A tricky Code Diary<br>
+comment (partially supported)<br>
+<li>~</li>
+<li>slash_two_asterix_reg = prxparse('/^\s{0,4}\/\*\</li>
+<li>two_asterix_reg = prxparse('/^\s{0,4}\*\</li>
+<li>if prxmatch('/\s{0,4}\*\/.</li><br>
+source_line = prxchange('s/\s{0,4}\*\/.<br>
+<li>~</li>
 </ul>
-<h1 id="main22">Main</h1>
+<h1 id="main31">Main</h1>
 <ul>
 <li>This document is generated as an example output</li>
 </ul>
-<h1 id="def25">Def</h1>
+<h1 id="def34">Def</h1>
 <ul>
 <li>The answer to life the universe and everything = 42</li>
 </ul>
-<h1 id="statistics28">Statistics</h1>
+<h1 id="statistics37">Statistics</h1>
 <ul>
 <li>Use the fanciest order of tests</li><br>
 1. The Atlantic test procedures<br>
@@ -66,31 +75,31 @@ data /**A tricky Code Diary<br>
 3. The Arctic test procedures<br>
 <li>We use alpha=0.05 in all tests</li>
 </ul>
-<h1 id="analysis35">Analysis</h1>
+<h1 id="analysis44">Analysis</h1>
 <ul>
 <li>Use the Milkyway default analysis for grouping of people</li><br>
 The Milkyway has stars, this is a test for a single-line two star that is appended to the above in markdown / HTML<br>
 </ul>
-<h1 id="regex39">Regex</h1>
+<h1 id="regex48">Regex</h1>
 <ul>
 <li>Essential definitions for the text-parsing regex.</li>
 </ul>
-<h1 id="testing42">Testing</h1>
+<h1 id="testing51">Testing</h1>
 <ul>
 <li>Longer, multiple line comment test</li><br>
 This is an example of a multiple-line two star SAS comment which will<br>
 be copied in as a single consecutive comment, it is terminated only<br>
 by the semicolon<br>
 </ul>
-<h1 id="staging48">Staging</h1>
+<h1 id="staging57">Staging</h1>
 <ul>
 <li>What needs to be done to move towards release.</li>
 </ul>
-<h1 id="finalization51">Finalization</h1>
+<h1 id="finalization60">Finalization</h1>
 <ul>
 <li>How the end product will be determined...</li>
 </ul>
-<h1 id="stata54">Stata</h1>
+<h1 id="stata63">Stata</h1>
 <ul>
 <li>Just an example of Stata comments</li>
 <li>Stata comments can be parsed</li><br>
