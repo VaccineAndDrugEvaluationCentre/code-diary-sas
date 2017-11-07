@@ -21,8 +21,6 @@
   Different line Code Diary line comment C
   data /**A tricky Code Diary
   comment (partially supported)
-* ~
-* ~
 
 # Main
 * This document is generated as an example output

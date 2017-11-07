@@ -352,6 +352,19 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 			end;
 		end;
 
+		* ignore tilda lines;
+		if prxmatch('/\~/',source_line) ^= 0 then do;
+		        use_line = 0;
+		        is_comment = 0;
+		end;
+
+		* remove whitespace and do not use the line if it is blank;
+		source_line = strip(source_line);
+		if length(source_line) = 0 then do;
+		        use_line = 0;
+		        is_comment = 0;
+		end;
+
 		* append the "source_line" variable to the dataset if the "use_line" flag
 		* has been set to 1;
 		if use_line;

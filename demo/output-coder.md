@@ -32,8 +32,6 @@
   1.1:28 Different line Code Diary line comment C
   1.1:30 data /**A tricky Code Diary
   1.1:31 comment (partially supported)
-* 1.2.1:147 ~
-* 1.2.2:28 ~
  
 # Main
 * 1:6 This document is generated as an example output
