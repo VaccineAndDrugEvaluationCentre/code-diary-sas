@@ -341,9 +341,12 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 
 		* trim away any ending asterix-slash characters, and;
 		* terminate the multiline comment;
-		if prxmatch('/\s{0,4}\*\/.*/', source_line) ^= 0 then do;
-			source_line = prxchange('s/\s{0,4}\*\/.*//', -1, source_line);
-			is_comment = 0;
+		if prxmatch('/[^~]\s{0,8}\*\/.*/', source_line) ^= 0 then do;
+			* ignore perl regex parsing lines;
+			if prxmatch('(?:prxchange|prxmatch|prxparse)',source_line) = 0 then do;
+				source_line = prxchange('s/\s{0,8}\*\/.*//', -1, source_line);
+				is_comment = 0;
+			end;
 		end;
 
 		* append the "source_line" variable to the dataset if the "use_line" flag
