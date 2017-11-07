@@ -1,6 +1,6 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Barret Monchka, Robert Bisewski, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% November 6, 2017
+% November 7, 2017
 
 # Exclusion criteria
 
@@ -22,10 +22,6 @@
   data /**A tricky Code Diary
   comment (partially supported)
 * ~
-* slash_two_asterix_reg = prxparse('/^\s{0,4}\/\*\
-* two_asterix_reg = prxparse('/^\s{0,4}\*\
-* if prxmatch('/\s{0,4}\*\/.
-  source_line = prxchange('s/\s{0,4}\*\/.
 * ~
 
 # Main

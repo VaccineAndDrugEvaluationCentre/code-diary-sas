@@ -1,9 +1,9 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Barret Monchka, Robert Bisewski, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% November 6, 2017
+% November 7, 2017
 
 # Scripts/macros used for project
-* 1: C:\Users\righoltc\Documents\GitHub\code-diary-sas\demo\project_main.sas
+* 1: C:\Users\bisewskr\development\code-diary-sas\demo\project_main.sas
 * 1.1: &DEMO_ROOT.project_script.sas
 * 1.2: &DEMO_ROOT.generate_documentation.sas
 * 1.2.1: &MACRO_ROOT.code_diary.sas
@@ -33,10 +33,6 @@
   1.1:30 data /**A tricky Code Diary
   1.1:31 comment (partially supported)
 * 1.2.1:147 ~
-* 1.2.1:299 slash_two_asterix_reg = prxparse('/^\s{0,4}\/\*\
-* 1.2.1:301 two_asterix_reg = prxparse('/^\s{0,4}\*\
-* 1.2.1:344 if prxmatch('/\s{0,4}\*\/.
-  1.2.1:345 source_line = prxchange('s/\s{0,4}\*\/.
 * 1.2.2:28 ~
  
 # Main
