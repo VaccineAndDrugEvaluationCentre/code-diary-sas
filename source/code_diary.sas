@@ -407,9 +407,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	
 	* Extract keywords, comments;
 	* Extract the special @main :tag keywords as well;
-	%let prx_grab_keyword = 's/.*@([\w\.]+ ).*/$1/'; * Grabs the keyword;
 	%let prx_grab_comment = 's/.*@[\w\.]+ (.*)/$1/'; * Grabs the comment;
-	%let prx_grab_tag = 's/.*:(\w+ ).*/$1/'; * Grabs the tag;
 	%let prx_grab_tagline = 's/.*:\w+ (.*)/$1/'; * Grabs the tagline;
 	data _m_ds_comments_with_keywords (drop = source_line last_keyword continued_comment_block prev_script_order_no prev_line_no);
 		set _m_ds_source_comments_no_repeat;
@@ -417,7 +415,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		length comment $&len_line.;
 		
 		comment_no = _N_;
-		keyword = lowcase(prxchange(&prx_grab_keyword., -1, source_line));
+		keyword = lowcase(prxchange( 's/.*@([\w\.]+ ).*/$1/', -1, source_line));
 		comment = prxchange(&prx_grab_comment., -1, source_line);
 		continued_item = 0; * Only overwritten to 1 if true;
 
@@ -448,7 +446,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		* Get special tags for main statment;
 		if keyword = 'main' then
 			do;
-				tag = lowcase(prxchange(&prx_grab_tag., -1, comment));
+				tag = lowcase(prxchange('s/.*:(\w+ ).*/$1/', -1, comment));
 				tagline = prxchange(&prx_grab_tagline., -1, comment);
 				
 				* If there is no tag defined, then the full line is repeated in both tag and tagline.;
@@ -632,7 +630,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 			
 		quit;');
 	run;
-	
+
 	* Add individual comments to keyword datasets;
 	* Note that line_no is numeric;
 	data _null_;
