@@ -622,22 +622,22 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	
 	* Add individual comments to keyword datasets;
 	* Note that line_no is numeric;
-	%let prx_change_double_quote = 's/"/""/'; * Change " to "" to be added to dataset properly;
 	data _null_;
 		set _m_ds_comments_with_keywords_IDd;
 		
 		call symput('iter_script_no', trim(script_no) );
 		call symput('iter_line_no', line_no );
 		call symput('iter_section_ID', trim(section_ID) );
-		call symput('iter_comment', prxchange(&prx_change_double_quote., -1, trim(comment)));
+		call symput('iter_comment', %bquote(trim(comment)));
 		call symput('iter_continued_item', continued_item );
-		
-		call execute('proc sql noprint;
 
-			insert into _CP_&iter_section_ID.
-			values ("&iter_script_no.", &iter_line_no., "&iter_comment.", &iter_continued_item.);
-			
-		quit;');
+		* NOTE: conducting a proc sql inside of a call execute;
+		*       should *always* be broken up as shown below, since this;
+		*       display helpful debug input if an error ought to occur;
+		call execute('proc sql noprint;');
+		call execute('insert into _CP_&iter_section_ID. ');
+		call execute('values ("&iter_script_no.",&iter_line_no.,"&iter_comment.",&iter_continued_item.);');
+		call execute('quit;');
 	run;
 	
 	* Define necessary metadata vars if needed;
