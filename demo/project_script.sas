@@ -6,30 +6,32 @@ Just a regular block comment, should not be parsed
 
 /*
 Block comments
-**Code Diary comment inside block comments;
+**@test Code Diary comment inside block comments;
 */
 
-/**Same line Code Diary block comment A (not implemented)*/
+**Example of a comment without keyword;
 
-/**Same line Code Diary block comment B
+/**@test Same line Code Diary block comment A*/
+
+/**@test Same line Code Diary block comment B
 */
 
 /**
-Same line Code Diary block comment C (not implemented)*/
+@test Same line Code Diary block comment C*/
 
 **
-Different line Code Diary line comment A
+@test Different line Code Diary line comment A
 ;
 
-**Different line Code Diary line comment B
+**@test Different line Code Diary line comment B
 ;
 
 **
-Different line Code Diary line comment C;
+@test Different line Code Diary line comment C;
 
-data /**A tricky Code Diary
-  comment (not supported)*/ _null_;
-  var_one = 1; **A Code Diary comment after code (not supported);
+data /**@test A tricky Code Diary
+  comment*/ _null_;
+  var_one = 1; **@test A Code Diary comment after code (not supported);
 run;
 
 /**
@@ -67,7 +69,7 @@ run;
 * Additional code that defines a number of useful regexes; * the above two-star line should be parsed;
 * but these single asterix lines should *not* be parsed *nor* appear;
 
-**@testing Longer, multiple line comment test;
+**@test Longer, multiple line comment test;
 **This is an example of a multiple-line two star SAS comment which will
   be copied in as a single consecutive comment, it is terminated only
   by the semicolon;

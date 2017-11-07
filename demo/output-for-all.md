@@ -1,6 +1,6 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Barret Monchka, Robert Bisewski, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% November 2, 2017
+% November 7, 2017
 
 # Exclusion criteria
 
@@ -12,18 +12,28 @@
 * Exclude terrestrial gods.
 
 # No keyword
-* Code Diary comment inside block comments
-  /**Same line Code Diary block comment B
-  Different line Code Diary line comment A
-  Different line Code Diary line comment B
-  Different line Code Diary line comment C
-  data /**A tricky Code Diary
+* Example of a comment without keyword
 
 # Main
 * This document is generated as an example output
 
 # Def
 * The answer to life the universe and everything = 42
+
+# Test
+* Code Diary comment inside block comments
+* Same line Code Diary block comment A
+* Same line Code Diary block comment B
+* Same line Code Diary block comment C
+* Different line Code Diary line comment A
+* Different line Code Diary line comment B
+* Different line Code Diary line comment C
+* A tricky Code Diary
+  comment
+* Longer, multiple line comment test
+  This is an example of a multiple-line two star SAS comment which will
+  be copied in as a single consecutive comment, it is terminated only
+  by the semicolon
 
 # Statistics
 * Use the fanciest order of tests
@@ -38,12 +48,6 @@
 
 # Regex
 * Essential definitions for the text-parsing regex.
-
-# Testing
-* Longer, multiple line comment test
-  This is an example of a multiple-line two star SAS comment which will
-  be copied in as a single consecutive comment, it is terminated only
-  by the semicolon
 
 # Staging
 * What needs to be done to move towards release.

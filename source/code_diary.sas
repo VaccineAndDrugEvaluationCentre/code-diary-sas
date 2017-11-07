@@ -9,9 +9,9 @@
 # Usage
 ## Comment block
 The main file and included scripts need to incorporate specially formatted comment blocks to be included in the output file. An example is:
-The special comment block is opened with:/**
-The special comment block is closed with:*/
-/*
+The special comment block is opened with (drop the spaces inbetween): / * *
+The special comment block is closed with (drop the spaces inbetween): * /
+
 An example of use inside the blocks is:
 @main :title The best documentation ever
 @main :authors Author One; Author Two; Author Three
@@ -312,15 +312,16 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 
 		* if starts with "slash-two-asterix-then-at" AND ends with "asterix-slash";
 		* then convert it to a normal starting "two-star" line;
-		source_line = prxchange('s/^.*;?\s{0,4}\/\*\*\@(.+)\*\//\*\*\@$1;/', -1, source_line);
+		source_line = prxchange('s/.*;?\s{0,4}\/\*\*\@(.+)\*\//\*\*\@$1;/', -1, source_line);
 
-		* if this then the multi-line comment is over;
-		if prxmatch(one_asterix_slash_reg, source_line) ^= 0 then is_comment = 0;
+		* if the multi-line comment ending with star-slash is on-going;
+		if prxmatch(one_asterix_slash_reg, source_line) ^= 0 then is_comment = 1;
 
 		* handle cases with two asterix comments of multi-lines;
 		if prxmatch(two_asterix_reg, source_line) ^= 0 then is_comment = 1;
 		if prxmatch(semicolon_reg, source_line) ^= 0 then is_comment = 0;
 		if prxmatch('/^\s{0,16}\*[^\*]/', source_line) ^= 0 then is_comment = 0;
+		if prxmatch(slash_two_asterix_reg, source_line) ^= 0 then is_comment = 1;
 
 		* set the "use_line" flag based on whether or not this has been deemed;
 		* to sufficiently resemble a SAS comment;
@@ -328,14 +329,41 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		else use_line = 0;
 
 		* if this then the multi-line comment has started;
-		if prxmatch(slash_two_asterix_reg, source_line) ^= 0 then is_comment = 1;
 		if prxmatch(slash_one_asterix_reg, source_line) ^= 0 then use_line = 0;
 
 		* if the "source_line" ends with a semicolon, strip it out;
 		source_line = prxchange('s/;[^\w]*$//', -1, source_line);
 
-		* if the "source_line" starts with two asterix chars, trim them away;
-		source_line = prxchange('s/^\*\*//', -1, source_line);
+		* if the "source_line" starts with two asterix chars (with or;
+		* without a slash), trim them away. This is done so that only;
+		* text content (and not surplus asterix chars) are recorded;
+		source_line = prxchange('s/^\s{0,4}\/?\*\*\s{0,4}//', -1, source_line);
+
+		* trim away any ending asterix-slash characters, and;
+		* terminate the multiline comment;
+		if prxmatch('/\s{0,8}\*\/.*/', source_line) ^= 0 then do;
+			if prxmatch('/(?:prxchange|prxmatch|prxparse)/',source_line) ^= 0 then do;
+				is_comment = 0;
+				use_line = 0;
+			end;
+			else do;
+				source_line = prxchange('s/\s{0,8}\*\/.*//', -1, source_line);
+				is_comment = 0;
+			end;
+		end;
+
+		* ignore tilda lines;
+		if prxmatch('/\~/',source_line) ^= 0 then do;
+		        use_line = 0;
+		        is_comment = 0;
+		end;
+
+		* remove whitespace and do not use the line if it is blank;
+		source_line = strip(source_line);
+		if length(source_line) = 0 then do;
+		        use_line = 0;
+		        is_comment = 0;
+		end;
 
 		* append the "source_line" variable to the dataset if the "use_line" flag
 		* has been set to 1;
@@ -379,9 +407,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	
 	* Extract keywords, comments;
 	* Extract the special @main :tag keywords as well;
-	%let prx_grab_keyword = 's/.*@([\w\.]+ ).*/$1/'; * Grabs the keyword;
 	%let prx_grab_comment = 's/.*@[\w\.]+ (.*)/$1/'; * Grabs the comment;
-	%let prx_grab_tag = 's/.*:(\w+ ).*/$1/'; * Grabs the tag;
 	%let prx_grab_tagline = 's/.*:\w+ (.*)/$1/'; * Grabs the tagline;
 	data _m_ds_comments_with_keywords (drop = source_line last_keyword continued_comment_block prev_script_order_no prev_line_no);
 		set _m_ds_source_comments_no_repeat;
@@ -389,7 +415,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		length comment $&len_line.;
 		
 		comment_no = _N_;
-		keyword = lowcase(prxchange(&prx_grab_keyword., -1, source_line));
+		keyword = lowcase(prxchange( 's/.*@([\w\.]+ ).*/$1/', -1, source_line));
 		comment = prxchange(&prx_grab_comment., -1, source_line);
 		continued_item = 0; * Only overwritten to 1 if true;
 
@@ -420,7 +446,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		* Get special tags for main statment;
 		if keyword = 'main' then
 			do;
-				tag = lowcase(prxchange(&prx_grab_tag., -1, comment));
+				tag = lowcase(prxchange('s/.*:(\w+ ).*/$1/', -1, comment));
 				tagline = prxchange(&prx_grab_tagline., -1, comment);
 				
 				* If there is no tag defined, then the full line is repeated in both tag and tagline.;
@@ -604,25 +630,25 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 			
 		quit;');
 	run;
-	
+
 	* Add individual comments to keyword datasets;
 	* Note that line_no is numeric;
-	%let prx_change_double_quote = 's/"/""/'; * Change " to "" to be added to dataset properly;
 	data _null_;
 		set _m_ds_comments_with_keywords_IDd;
 		
 		call symput('iter_script_no', trim(script_no) );
 		call symput('iter_line_no', line_no );
 		call symput('iter_section_ID', trim(section_ID) );
-		call symput('iter_comment', prxchange(&prx_change_double_quote., -1, trim(comment)));
+		call symput('iter_comment', %bquote(trim(comment)));
 		call symput('iter_continued_item', continued_item );
-		
-		call execute('proc sql noprint;
 
-			insert into _CP_&iter_section_ID.
-			values ("&iter_script_no.", &iter_line_no., "&iter_comment.", &iter_continued_item.);
-			
-		quit;');
+		* NOTE: conducting a proc sql inside of a call execute;
+		*       should *always* be broken up as shown below, since this;
+		*       display helpful debug input if an error ought to occur;
+		call execute('proc sql noprint;');
+		call execute('insert into _CP_&iter_section_ID. ');
+		call execute('values ("&iter_script_no.",&iter_line_no.,"&iter_comment.",&iter_continued_item.);');
+		call execute('quit;');
 	run;
 	
 	* Define necessary metadata vars if needed;
