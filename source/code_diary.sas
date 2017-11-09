@@ -358,6 +358,13 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		        is_comment = 0;
 		end;
 
+		* ignore percent lines, note that they are handled in;
+		* separate logic and should not be used here;
+		if prxmatch('/\%[a-zA-Z]/',source_line) ^= 0 then do;
+		        use_line = 0;
+		        is_comment = 0;
+		end;
+
 		* remove whitespace and do not use the line if it is blank;
 		source_line = strip(source_line);
 		if length(source_line) = 0 then do;
