@@ -9,9 +9,9 @@
 # Usage
 ## Comment block
 The main file and included scripts need to incorporate specially formatted comment blocks to be included in the output file. An example is:
-The special comment block is opened with (drop the spaces inbetween): / * *
-The special comment block is closed with (drop the spaces inbetween): * /
-
+The special comment block is opened with:/**
+The special comment block is closed with:*/
+/*
 An example of use inside the blocks is:
 @main :title The best documentation ever
 @main :authors Author One; Author Two; Author Three
@@ -275,7 +275,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		where script_no in (select old_script_no from &scripts_ds._repeated);
 
 	quit;
-
+	
 	* Add repeated scripts to ordered set;
 	data &scripts_ds._ordered;
 		set &scripts_ds._ordered &scripts_ds._rep_unique;
@@ -287,96 +287,48 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	* "*/" turns it off for this line;
 	* First line of a script will be off;
 	* Need two temp parameters to work, because of order of commands and retain statement;
-	*;
-	* NOTE: Further documentation regarding the complex regexes use in this section are
-	*       detailed in the project README.md in the root of this repo.;
-	data _m_ds_source_comments (drop = is_comment use_line slash_one_asterix_reg slash_two_asterix_reg two_asterix_reg semicolon_reg one_asterix_slash_reg);
+	data _m_ds_source_comments (drop = is_comment use_line);
 		set &all_source_ds.;
 		retain is_comment use_line;
 		by script_order_no;
-
-		* regexes to help obtain multi-line comments;
-		slash_two_asterix_reg = prxparse('/^\s{0,4}\/\*\*/');
-		slash_one_asterix_reg = prxparse('/^\s{0,4}\/\*[^\*]/');
-		two_asterix_reg = prxparse('/^\s{0,4}\*\*/');
-		semicolon_reg = prxparse('/;$/');
-		one_asterix_slash_reg = prxparse('/\s{0,4}\*\//');
-
-		* only a continued comment block if it is the second line in the block;
-		* put it before use_line is defined;
+		
+		* Only a continued comment block if it is the second line in the block (put it before use_line is defined);
 		if use_line = 1 then continued_comment_block = 1;
 		else continued_comment_block = 0;
-
-		* skip the first;
+		
 		if first.script_no then is_comment = 0;
-
-		* if starts with "slash-two-asterix-then-at" AND ends with "asterix-slash";
-		* then convert it to a normal starting "two-star" line;
-		source_line = prxchange('s/.*;?\s{0,4}\/\*\*\@(.+)\*\//\*\*\@$1;/', -1, source_line);
-
-		* if the multi-line comment ending with star-slash is on-going;
-		if prxmatch(one_asterix_slash_reg, source_line) ^= 0 then is_comment = 1;
-
-		* handle cases with two asterix comments of multi-lines;
-		if prxmatch(two_asterix_reg, source_line) ^= 0 then is_comment = 1;
-		if prxmatch(semicolon_reg, source_line) ^= 0 then is_comment = 0;
-		if prxmatch('/^\s{0,16}\*[^\*]/', source_line) ^= 0 then is_comment = 0;
-		if prxmatch(slash_two_asterix_reg, source_line) ^= 0 then is_comment = 1;
-
-		* set the "use_line" flag based on whether or not this has been deemed;
-		* to sufficiently resemble a SAS comment;
+		if find(source_line, '*/') then is_comment = 0;
+		
 		if is_comment then use_line = 1;
 		else use_line = 0;
-
-		* if this then the multi-line comment has started;
-		if prxmatch(slash_one_asterix_reg, source_line) ^= 0 then use_line = 0;
-
-		* if the "source_line" ends with a semicolon, strip it out;
-		source_line = prxchange('s/;[^\w]*$//', -1, source_line);
-
-		* if the "source_line" starts with two asterix chars (with or;
-		* without a slash), trim them away. This is done so that only;
-		* text content (and not surplus asterix chars) are recorded;
-		source_line = prxchange('s/^\s{0,4}\/?\*\*\s{0,4}//', -1, source_line);
-
-		* trim away any ending asterix-slash characters, and;
-		* terminate the multiline comment;
-		if prxmatch('/\s{0,8}\*\/.*/', source_line) ^= 0 then do;
-			if prxmatch('/(?:prxchange|prxmatch|prxparse)/',source_line) ^= 0 then do;
-				is_comment = 0;
-				use_line = 0;
-			end;
-			else do;
-				source_line = prxchange('s/\s{0,8}\*\/.*//', -1, source_line);
-				is_comment = 0;
-			end;
-		end;
-
-		* ignore tilda lines;
-		if prxmatch('/\~/',source_line) ^= 0 then do;
-		        use_line = 0;
-		        is_comment = 0;
-		end;
-
-		* ignore percent lines, note that they are handled in;
-		* separate logic and should not be used here;
-		if prxmatch('/\%[a-zA-Z]/',source_line) ^= 0 then do;
-		        use_line = 0;
-		        is_comment = 0;
-		end;
-
-		* remove whitespace and do not use the line if it is blank;
-		source_line = strip(source_line);
-		if length(source_line) = 0 then do;
-		        use_line = 0;
-		        is_comment = 0;
-		end;
-
-		* append the "source_line" variable to the dataset if the "use_line" flag
-		* has been set to 1;
+		
+		/* If you update this line, ALSO UPDATE THE SECOND LINE AFTER ACCORDINGLY!!!*/
+		if find(source_line, '/**') then is_comment = 1;
+		/* But escape the line above when this comment parser file is included as part of main. */
+		if find(source_line, "if find(source_line, '/**') then is_comment = 1;") then is_comment = 0;/**/
+		
 		if use_line;
 	run;
+	
+	* Grab the inline comments and add them to the set;
+	%let prx_grab_inline_comment = %str(s/(\*\*)(.*)(;)/$2/); * Grabs the comment;
+	proc sql noprint;
 
+		create table _m_ds_single_line_comments as
+		select script_no,
+			line_no,
+			prxchange("&prx_grab_inline_comment.", -1, source_line) as source_line length=&len_line.,
+			script_order_no,
+			. as continued_comment_block
+		from &all_source_ds.
+		where strip(source_line) like '**%;';
+		
+		insert into _m_ds_source_comments
+		select *
+		from _m_ds_single_line_comments;
+
+	quit;
+	
 	* Remove repeated comments from including the same file multiple times;
 	* Rename script number, and only use first occurence;
 	proc sql noprint;
@@ -414,15 +366,17 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	
 	* Extract keywords, comments;
 	* Extract the special @main :tag keywords as well;
-	%let prx_grab_comment = 's/.*@[\w\.]+ (.*)/$1/'; * Grabs the comment;
-	%let prx_grab_tagline = 's/.*:\w+ (.*)/$1/'; * Grabs the tagline;
+	%let prx_grab_keyword = 's/(.*@)([\w\.]+ )(.*)/$2/'; * Grabs the keyword;
+	%let prx_grab_comment = 's/(.*@)([\w\.]+ )(.*)/$3/'; * Grabs the comment;
+	%let prx_grab_tag = 's/(.*:)(\w+ )(.*)/$2/'; * Grabs the tag;
+	%let prx_grab_tagline = 's/(.*:)(\w+ )(.*)/$3/'; * Grabs the tagline;
 	data _m_ds_comments_with_keywords (drop = source_line last_keyword continued_comment_block prev_script_order_no prev_line_no);
 		set _m_ds_source_comments_no_repeat;
 		retain last_keyword;
 		length comment $&len_line.;
 		
 		comment_no = _N_;
-		keyword = lowcase(prxchange( 's/.*@([\w\.]+ ).*/$1/', -1, source_line));
+		keyword = lowcase(prxchange(&prx_grab_keyword., -1, source_line));
 		comment = prxchange(&prx_grab_comment., -1, source_line);
 		continued_item = 0; * Only overwritten to 1 if true;
 
@@ -453,7 +407,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		* Get special tags for main statment;
 		if keyword = 'main' then
 			do;
-				tag = lowcase(prxchange('s/.*:(\w+ ).*/$1/', -1, comment));
+				tag = lowcase(prxchange(&prx_grab_tag., -1, comment));
 				tagline = prxchange(&prx_grab_tagline., -1, comment);
 				
 				* If there is no tag defined, then the full line is repeated in both tag and tagline.;
@@ -478,8 +432,8 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	* Get list of unique keywords in source and their order of appearance;
 	* Change _ to space for header;
 	%let prx_underscore_to_space = 's/_/ /';
-	%let prx_grab_keyword_parent = 's/(.*)\.\w+/$1/'; * Grabs the parent of the key word, e.g. section.header.paragraph --> section.header;
-	%let prx_grab_keyword_lowest_level = 's/.*\.(\w+)/$1/'; * Grabs the lowest level of the key word, e.g. section.header.paragraph --> paragraph;
+	%let prx_grab_keyword_parent = 's/(.*)(\.)(\w+)/$1/'; * Grabs the parent of the key word, e.g. section.header.paragraph --> section.header;
+	%let prx_grab_keyword_lowest_level = 's/(.*)(\.)(\w+)/$3/'; * Grabs the lowest level of the key word, e.g. section.header.paragraph --> paragraph;
 	proc sql noprint;
 
 		create table _m_ds_keyword_list as
@@ -557,7 +511,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		call symput("iter_keyword", trim(keyword) );
 		call symput("iter_order", order_no );
 		
-		call execute('%let _m_order_overwrite = &_m_order_overwrite if keyword = "&iter_keyword" then do keyword_order_no = &iter_order.%str(;) overwritten_order_no = 1 %str(;) end%str(;);');
+		call execute('%let _m_order_overwrite = &_m_order_overwrite if keyword = "&iter_keyword" then keyword_order_no = &iter_order.%str(;);');
 	run;
 	
 	%let _m_header_overwrite = ;
@@ -574,7 +528,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 	data _m_ds_keyword_list;
 		set _m_ds_keyword_list;
 		
-		* Overwrite order with user-defined order for keywords;
+		* Overwrite order with use-defined order for keywords;
 		&_m_order_overwrite.
 		
 		* Create user-defined headings;
@@ -592,7 +546,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		set _m_ds_keyword_list;
 		retain last_order_no;
 
-		if not missing(keyword_parent) and (not overwritten_order_no) then do;
+		if not missing(keyword_parent) and (keyword_order_no > 0) then do;
 			keyword_order_no = last_order_no + 0.001;
 		end;
 
@@ -637,25 +591,25 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 			
 		quit;');
 	run;
-
+	
 	* Add individual comments to keyword datasets;
 	* Note that line_no is numeric;
+	%let prx_change_double_quote = 's/"/""/'; * Change " to "" to be added to dataset properly;
 	data _null_;
 		set _m_ds_comments_with_keywords_IDd;
 		
 		call symput('iter_script_no', trim(script_no) );
 		call symput('iter_line_no', line_no );
 		call symput('iter_section_ID', trim(section_ID) );
-		call symput('iter_comment', %bquote(trim(comment)));
+		call symput('iter_comment', prxchange(&prx_change_double_quote., -1, trim(comment)));
 		call symput('iter_continued_item', continued_item );
+		
+		call execute('proc sql noprint;
 
-		* NOTE: conducting a proc sql inside of a call execute;
-		*       should *always* be broken up as shown below, since this;
-		*       display helpful debug input if an error ought to occur;
-		call execute('proc sql noprint;');
-		call execute('insert into _CP_&iter_section_ID. ');
-		call execute('values ("&iter_script_no.",&iter_line_no.,"&iter_comment.",&iter_continued_item.);');
-		call execute('quit;');
+			insert into _CP_&iter_section_ID.
+			values ("&iter_script_no.", &iter_line_no., "&iter_comment.", &iter_continued_item.);
+			
+		quit;');
 	run;
 	
 	* Define necessary metadata vars if needed;
@@ -768,7 +722,9 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		
 		* Print continued items with markdown code for connecting lines (two spaces) always print two spaces at end.;
 		if continued_item = 1 then put "  " @;
-		put print_line;
+		put print_line @;
+		put "  ";
+		
 	run;
 	
 	* Write main data to scrubbed file if required;
@@ -783,7 +739,8 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 			* Print continued items with markdown code for connecting lines (two spaces) always print two spaces at end.;
 			if not missing(print_line_scrubbed) then do;
 				if continued_item = 1 then put "  " @;
-				put print_line_scrubbed;
+				put print_line_scrubbed  @;
+				put "  ";
 			end;
 		run;
 	%end;
