@@ -6,4 +6,4 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 ### Added
 - Initial version of code
-- Initial versio of demo's
+- Initial version of demos
