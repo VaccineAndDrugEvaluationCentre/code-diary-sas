@@ -2,6 +2,8 @@
 Just a regular block comment, should not be parsed 
 */
 
+** Test comment with special characters:"`&;
+
 /* Inline block comment */
 
 /*
@@ -74,10 +76,7 @@ run;
   be copied in as a single consecutive comment, it is terminated only
   by the semicolon;
 
-* Sample code here; /**@staging What needs to be done to move towards release. */
-* Note: the above is an example of an inline slash-two-asterix SAS comment;
-
-/**@finalization How the end product will be determined... */
-* The above is designed to account for how SAS handles slash-two-asterix *at* comments;
-
-* Some more code, nothing too fancy...;
+* Sample code here; 
+data _null_;
+  set _null_;
+run;
