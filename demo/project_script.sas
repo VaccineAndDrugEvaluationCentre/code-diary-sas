@@ -72,8 +72,8 @@ run;
 * but these single asterix lines should *not* be parsed *nor* appear;
 
 **@test Longer, multiple line comment test;
-**This is an example of a multiple-line two star SAS comment which will
-  be copied in as a single consecutive comment, it is terminated only
+**This is an example of a multiple-line two star SAS comment over multiple lines
+  as a single consecutive comment, it is terminated only
   by the semicolon;
 
 * Sample code here; 
