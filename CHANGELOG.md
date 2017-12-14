@@ -13,4 +13,4 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Initial version of code
 - Initial version of demos
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.0...HEAD
