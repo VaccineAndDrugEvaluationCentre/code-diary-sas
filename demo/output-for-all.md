@@ -1,6 +1,6 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Barret Monchka, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% December 7, 2017
+% March 15, 2018
 
 # Exclusion criteria   
 
@@ -41,5 +41,9 @@
 * Essential definitions for the text-parsing regex.   
 
 # Stata   
-* Just an example of Stata comments   
-* A one-line Stata command   
+* Just an example of Stata comments
+* A one-line Stata command
+* Test the include/run/do parsing
+* This file husk does nothing except help with testing the `include` call...
+* This file husk does nothing except help with testing the `run` call...
+* This file husk does nothing except help with testing the `do` call...

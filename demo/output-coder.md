@@ -1,14 +1,17 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Barret Monchka, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% December 7, 2017
+% March 15, 2018
 
 # Scripts/macros used for project
-* 1: C:\Users\righoltc\Documents\GitHub\code-diary-sas\demo\project_main.sas
+* 1: C:\Users\bisewskr\development\code-diary-sas\demo\project_main.sas
 * 1.1: &DEMO_ROOT.project_script.sas
 * 1.2: &DEMO_ROOT.generate_documentation.sas
 * 1.2.1: &MACRO_ROOT.code_diary.sas
 * 1.2.2: &MACRO_ROOT.convert_markdown_to_html.sas
 * 1.s1: &DEMO_ROOT.project_stata.do
+* 1.s1.16: &demo_root\stata_husk_a.do
+* 1.s1.17: &demo_root\stata_husk_b.do
+* 1.s1.18: &demo_root\stata_husk_c.do
     
 # Task list   
 * 1.1:64 Insert this code from reference Qwerty (Nature, 2345)   
@@ -52,5 +55,9 @@
 * 1.1:70 Essential definitions for the text-parsing regex.   
     
 # Stata   
-* 1.s1:1 Just an example of Stata comments   
-* 1.s1:8 A one-line Stata command   
+* 1.s1:6 Just an example of Stata comments
+* 1.s1:13 A one-line Stata command
+* 1.s1:15 Test the include/run/do parsing
+* 1.s1.16:1 This file husk does nothing except help with testing the `include` call...
+* 1.s1.17:1 This file husk does nothing except help with testing the `run` call...
+* 1.s1.18:1 This file husk does nothing except help with testing the `do` call...
