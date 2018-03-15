@@ -1,5 +1,5 @@
 % Title for output document, just an example (v 1.2.3)
-% Christiaan Righolt, Barret Monchka, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
+% Christiaan Righolt, Robert Bisewski, Barret Monchka, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
 % March 15, 2018
 
 # Exclusion criteria

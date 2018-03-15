@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 ### Removed
 
+## [1.0.1] - 2018-03-15
+### Added
+- Support for alternative Stata file imports via `run` and `do`
+
 ## [1.0.0] - 2017-12-14
 ### Added
 - Initial version of code
