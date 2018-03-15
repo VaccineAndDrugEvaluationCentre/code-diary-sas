@@ -844,7 +844,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		%end;
 		
 		* Find stata files called from stata;
-		%let prx_grab_stata_file = 's/(.*include )(.+\.do)(.*)/$2/'; * Grabs the included script name;
+		%let prx_grab_stata_file = 's/[ \t](.+\.do)[^a-zA-Z0-9]/$1/'; * Grabs the included script name;
 		%let prx_stata_to_sas_macro = "s/(`)(\w+)(')/&$2/"; * Grabs the included script name;
 		%if "&input_file_type." = "do" %then %do;
 			data _in_stata_&curr_script_no_text.;
@@ -854,7 +854,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 				length script $&len_script.;
 				
 				* If you update this line, ALSO UPDATE THE SECOND PART OF THE STATEMENT ACCORDINGLY!!! Otherwise that line counts as an include;
-				where (lowcase(source_line) like '%include%.do%') and not (source_line like '%where lowcase(source_line)%');
+				where (lowcase(source_line) like '%.do%') and not (source_line like '%where lowcase(source_line)%');
 				
 				script_no = ("&curr_script_no." || ".s" || strip(put(_N_, &len_script_no..)));
 				script = prxchange(&prx_grab_stata_file., -1, source_line);
