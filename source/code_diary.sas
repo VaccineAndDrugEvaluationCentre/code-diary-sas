@@ -832,7 +832,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 				
 				length script_no $&len_script_no.;
 				length script $&len_script.;
-				
+
 				* If you update this line, ALSO UPDATE THE SECOND PART OF THE STATEMENT ACCORDINGLY!!! Otherwise that line counts as an include;
 				where (lowcase(source_line) like '%x %stata%do%.do%') and not (source_line like '%where lowcase(source_line)%');
 				
@@ -844,22 +844,24 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		%end;
 		
 		* Find stata files called from stata;
-		%let prx_grab_stata_file = 's/[ \t](.+\.do)[^a-zA-Z0-9]/$1/'; * Grabs the included script name;
-		%let prx_stata_to_sas_macro = "s/(`)(\w+)(')/&$2/"; * Grabs the included script name;
+		%let prx_grab_stata_file = 's/(include|run|do)([ \t]+)(.+\.do)[^a-zA-Z0-9]/$3/'; * Grabs the included script name;
+		%let prx_stata_to_sas_macro = "s/`(\w+)'/&$1/"; * Grabs the included script name;
 		%if "&input_file_type." = "do" %then %do;
 			data _in_stata_&curr_script_no_text.;
 				set _m_ds_current_file_content;
 				
 				length script_no $&len_script_no.;
 				length script $&len_script.;
-				
-				* If you update this line, ALSO UPDATE THE SECOND PART OF THE STATEMENT ACCORDINGLY!!! Otherwise that line counts as an include;
-				where (lowcase(source_line) like '%.do%') and not (source_line like '%where lowcase(source_line)%');
-				
-				script_no = ("&curr_script_no." || ".s" || strip(put(_N_, &len_script_no..)));
+
+				* select only the source lines of interest;
+				source_line = lowcase(source_line);
+
+				if prxmatch(&prx_grab_stata_file, source_line);
+
+				script_no = ("&curr_script_no." || "." || strip(put(_N_, &len_script_no..)));
 				script = prxchange(&prx_grab_stata_file., -1, source_line);
 				script = prxchange(&prx_stata_to_sas_macro., -1, script);
-				
+
 				drop line_no source_line;
 			run;
 		%end;
