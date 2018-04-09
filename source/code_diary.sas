@@ -810,9 +810,14 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 			
 			length script_no $&len_script_no.;
 			length script $&len_script.;
-			
-			* If you update this line, ALSO UPDATE THE SECOND PART OF THE STATEMENT ACCORDINGLY!!! Otherwise that line counts as an include;
-			where (lowcase(source_line) like '%include%.sas%') and not (source_line like '%where lowcase(source_line)%');
+
+			* select only the source lines of interest;
+			source_line = lowcase(source_line);
+
+			if prxmatch("/.*include.*\.sas.*/", source_line);
+
+			* skip other versions of code diary;
+			if prxmatch("/.*include.*code_diary\.sas.*/", source_line) = 0;
 			
 			script_no = ("&curr_script_no." || "." || strip(put(_N_, &len_script_no..)));
 			script = prxchange(&prx_grab_include_file., -1, source_line);
@@ -833,8 +838,10 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 				length script_no $&len_script_no.;
 				length script $&len_script.;
 
-				* If you update this line, ALSO UPDATE THE SECOND PART OF THE STATEMENT ACCORDINGLY!!! Otherwise that line counts as an include;
-				where (lowcase(source_line) like '%x %stata%do%.do%') and not (source_line like '%where lowcase(source_line)%');
+				* select only the source lines of interest;
+				source_line = lowcase(source_line);
+
+				if prxmatch("/x .*stata.*do.*\.do.*/", source_line);
 				
 				script_no = ("&curr_script_no." || ".s" || strip(put(_N_, &len_script_no..)));
 				script = prxchange(&prx_grab_stata_file., -1, source_line);
@@ -844,7 +851,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		%end;
 		
 		* Find stata files called from stata;
-		%let prx_grab_stata_file = 's/.*(include|run|do)([ \t]+)(.+\.a?do)(.*)/$3/'; * Grabs the included script name;
+		%let prx_grab_stata_file = 's/\s*(i|r|d)(nclude|un|o)"?[ \t]+(.+\.do).*"?.*/$3/'; * Grabs the included script name;
 		%let prx_stata_to_sas_macro = "s/`(\w+)'/&$1/"; * Grabs the included script name;
 		%if "&input_file_type." = "do" %then %do;
 			data _in_stata_&curr_script_no_text.;
@@ -852,6 +859,8 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 				
 				length script_no $&len_script_no.;
 				length script $&len_script.;
+
+				source_line = compress(source_line,'"');
 
 				* select only the source lines of interest;
 				source_line = lowcase(source_line);
