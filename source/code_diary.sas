@@ -807,17 +807,14 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		%let prx_grab_include_file = 's/(.*include ")(.+)(".*)/$2/'; * Grabs the included script name;
 		data _includes_&curr_script_no_text.;
 			set _m_ds_current_file_content;
+			source_line = lowcase(source_line);
+			if prxmatch("/.*include.*\.sas.*/", source_line);
+		run;
+		data _includes_&curr_script_no_text.;
+			set _includes_&curr_script_no_text.;
 			
 			length script_no $&len_script_no.;
 			length script $&len_script.;
-
-			* select only the source lines of interest;
-			source_line = lowcase(source_line);
-
-			if prxmatch("/.*include.*\.sas.*/", source_line);
-
-			* skip other versions of code diary;
-			if prxmatch("/.*include.*code_diary\.sas.*/", source_line) = 0;
 			
 			script_no = ("&curr_script_no." || "." || strip(put(_N_, &len_script_no..)));
 			script = prxchange(&prx_grab_include_file., -1, source_line);
@@ -834,15 +831,15 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		%if "&input_file_type." = "sas" %then %do;
 			data _in_stata_&curr_script_no_text.;
 				set _m_ds_current_file_content;
+				source_line = lowcase(source_line);
+				if prxmatch("/x .*stata.*do.*\.do.*/", source_line);
+			run;
+			data _in_stata_&curr_script_no_text.;
+				set _in_stata_&curr_script_no_text.;
 				
 				length script_no $&len_script_no.;
 				length script $&len_script.;
 
-				* select only the source lines of interest;
-				source_line = lowcase(source_line);
-
-				if prxmatch("/x .*stata.*do.*\.do.*/", source_line);
-				
 				script_no = ("&curr_script_no." || ".s" || strip(put(_N_, &len_script_no..)));
 				script = prxchange(&prx_grab_stata_file., -1, source_line);
 				
@@ -851,7 +848,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		%end;
 		
 		* Find stata files called from stata;
-		%let prx_grab_stata_file = 's/\s*(i|r|d)(nclude|un|o)"?[ \t]+(.+\.do).*"?.*/$3/'; * Grabs the included script name;
+		%let prx_grab_stata_file = 's/^\s*(include|run|do)"?[ \t]+(.+\.do).*"?.*/$2/'; * Grabs the included script name;
 		%let prx_stata_to_sas_macro = "s/`(\w+)'/&$1/"; * Grabs the included script name;
 		%if "&input_file_type." = "do" %then %do;
 			data _in_stata_&curr_script_no_text.;
@@ -867,7 +864,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 
 				if prxmatch(&prx_grab_stata_file, source_line);
 
-				script_no = ("&curr_script_no." || "." || strip(put(_N_, &len_script_no..)));
+				script_no = ("&curr_script_no." || ".s" || strip(put(_N_, &len_script_no..)));
 				script = prxchange(&prx_grab_stata_file., -1, source_line);
 				script = prxchange(&prx_stata_to_sas_macro., -1, script);
 
@@ -904,12 +901,6 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		run;
 	
 	%end;
-	
-	%else %if ("&input_file." ~= "C:\dir\file.sas") %then %do;
-		* Throw warning when it is not the "detected script" in this file ();
-		%put WARNING: The included file &input_file. does not exist.;
-	%end;
-	
 %mend;
 
 * Read files line-by-line and returns line numbers with text;
