@@ -848,7 +848,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		%end;
 		
 		* Find stata files called from stata;
-		%let prx_grab_stata_file = 's/^\s*(include|run|do)"?[ \t]+(.+\.do).*"?.*/$2/'; * Grabs the included script name;
+		%let prx_grab_stata_file = 's/^[\s\/\*]*(include|run|do)"?[ \t]+(.+\.do).*"?.*/$2/'; * Grabs the included script name;
 		%let prx_stata_to_sas_macro = "s/`(\w+)'/&$1/"; * Grabs the included script name;
 		%if "&input_file_type." = "do" %then %do;
 			data _in_stata_&curr_script_no_text.;
