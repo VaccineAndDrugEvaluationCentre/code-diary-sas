@@ -1,6 +1,6 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Robert Bisewski, Barret Monchka, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% April 10, 2018
+% April 11, 2018
 
 # Scripts/macros used for project
 * 1: C:\Users\bisewskr\development\code-diary-sas\demo\project_main.sas
