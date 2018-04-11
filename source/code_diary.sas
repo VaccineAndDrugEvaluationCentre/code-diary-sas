@@ -846,18 +846,24 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 				drop line_no source_line;
 			run;
 		%end;
-		
+
+		* Regex to obtain the include/run/do files needed, for three common Stata import / embedded-call types;
+		*;
+		* 1) parse --> do /path/to/file.do;
+		* 2) parse --> do "/path/to/file.do";
+		* 3) avoid --> global F8 "do "P:\project_name\source\main.do"";
+		%let prx_grab_stata_file = 's/^[\s\/\*]*(include|run|do)"?[ \t]+"?([^"]+\.do)"*/$2/';
+
+		* Regex to grab the included script name;
+		%let prx_stata_to_sas_macro = "s/`(\w+)'/&$1/";
+
 		* Find stata files called from stata;
-		%let prx_grab_stata_file = 's/^[\s\/\*]*(include|run|do)"?[ \t]+(.+\.do).*"?.*/$2/'; * Grabs the included script name;
-		%let prx_stata_to_sas_macro = "s/`(\w+)'/&$1/"; * Grabs the included script name;
 		%if "&input_file_type." = "do" %then %do;
 			data _in_stata_&curr_script_no_text.;
 				set _m_ds_current_file_content;
 				
 				length script_no $&len_script_no.;
 				length script $&len_script.;
-
-				source_line = compress(source_line,'"');
 
 				* select only the source lines of interest;
 				source_line = lowcase(source_line);
