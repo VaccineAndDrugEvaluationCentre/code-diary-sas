@@ -8,13 +8,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 ### Removed
 
-## [1.0.1] - 2018-03-15
+## [1.0.1] - 2018-04-12
 ### Added
 - Support for alternative Stata file imports via `run` and `do`
 
-## [1.0.0] - 2017-12-14
+## 1.0.0 - 2017-12-14
 ### Added
 - Initial version of code
 - Initial version of demos
 
-[Unreleased]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.0...v1.0.1
