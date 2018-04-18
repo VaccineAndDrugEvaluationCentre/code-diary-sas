@@ -1,6 +1,6 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Robert Bisewski, Barret Monchka, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% April 11, 2018
+% April 18, 2018
 
 # Exclusion criteria
 
@@ -45,6 +45,6 @@
 * A one-line Stata command
 * Test the include/run/do parsing
 * This file husk does nothing except help with testing the `include` call...
+* This file husk does nothing except help with dollar-sign globals...
 * This file husk does nothing except help with testing the `run` call...
 * This file husk does nothing except help with testing the `do` call...
-

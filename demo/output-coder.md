@@ -1,6 +1,6 @@
 % Title for output document, just an example (v 1.2.3)
 % Christiaan Righolt, Robert Bisewski, Barret Monchka, Salah Mahmud; Vaccine and Drug Evaluation Centre (VDEC)
-% April 11, 2018
+% April 18, 2018
 
 # Scripts/macros used for project
 * 1: C:\Users\bisewskr\development\code-diary-sas\demo\project_main.sas
@@ -10,6 +10,7 @@
 * 1.2.2: &macro_root.convert_markdown_to_html.sas
 * 1.s1: &demo_root.project_stata.do
 * 1.s1.s16: &demo_root\stata_husk_a.do
+* 1.s1.s16.s6: &demo_root/stata_husk_d.do
 * 1.s1.s17: &demo_root\stata_husk_b.do
 * 1.s1.s18: &demo_root\stata_husk_c.do
 
@@ -58,7 +59,7 @@
 * 1.s1:6 Just an example of Stata comments
 * 1.s1:13 A one-line Stata command
 * 1.s1:15 Test the include/run/do parsing
-* 1.s1.s16:5 This file husk does nothing except help with testing the `include` call...
+* 1.s1.s16:8 This file husk does nothing except help with testing the `include` call...
+* 1.s1.s16.s6:1 This file husk does nothing except help with dollar-sign globals...
 * 1.s1.s17:1 This file husk does nothing except help with testing the `run` call...
 * 1.s1.s18:1 This file husk does nothing except help with testing the `do` call...
-
