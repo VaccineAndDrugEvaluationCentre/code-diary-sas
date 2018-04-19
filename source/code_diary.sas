@@ -855,7 +855,8 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		%let prx_grab_stata_file = 's/^[\s\/\*]*(include|run|do)"?[ \t]+"?([^"]+\.do)"*/$2/';
 
 		* Regex to grab the included script name;
-		%let prx_stata_to_sas_macro = "s/`(\w+)'/&$1/";
+		%let prx_stata_local_to_sas_macro = "s/`(\w+)'/&$1/";
+		%let prx_stata_global_to_sas_macro = "s/\$(\w+)/&$1/";
 
 		* Find stata files called from stata;
 		%if "&input_file_type." = "do" %then %do;
@@ -872,8 +873,8 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 
 				script_no = ("&curr_script_no." || ".s" || strip(put(_N_, &len_script_no..)));
 				script = prxchange(&prx_grab_stata_file., -1, source_line);
-				script = prxchange(&prx_stata_to_sas_macro., -1, script);
-				script = prxchange('s/\$(\w+)/&$1/', -1, script);
+				script = prxchange(&prx_stata_local_to_sas_macro., -1, script);
+				script = prxchange(&prx_stata_global_to_sas_macro., -1, script);
 
 				drop line_no source_line;
 			run;
