@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [1.0.2] - 2018-04-19
 ### Changed
-- Allow both local and global Stata macro variables in dynamic path declaration1
+- Allow both local and global Stata macro variables in dynamic path declarations
 
 ## [1.0.1] - 2018-04-12
 ### Added
