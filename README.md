@@ -17,4 +17,4 @@ See the files in the [**demo**](https://github.com/VaccineAndDrugEvaluationCentr
 These examples, combined with the documentation in the files themselves, are the user manual.
 
 ## DOI
-Cite this using the DOI (see link on top). Zenodo (https://zenodo.org) automatically register a DOI for each new release and update the tag above.
+Cite this using the DOI (see link on top). Zenodo (https://zenodo.org) automatically registers a DOI for each new release and updates the tag above.
