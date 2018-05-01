@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 ### Removed
 
+## [1.0.3] - 2018-05-01
+### Added
+- Zenodo (https://zenodo.org) DOI generation and instructions in readme
+
 ## [1.0.2] - 2018-04-19
 ### Changed
 - Allow both local and global Stata macro variables in dynamic path declarations
@@ -21,6 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Initial version of code
 - Initial version of demos
 
-[Unreleased]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.3...HEAD
+[1.0.2]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.0...v1.0.1

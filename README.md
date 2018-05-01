@@ -14,3 +14,6 @@ Copy the relevant files from the [**source**](https://github.com/VaccineAndDrugE
 ## How to
 See the files in the [**demo**](https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/tree/master/demo) folder for example uses.
 These examples, combined with the documentation in the files themselves, are the user manual.
+
+## Upgrades
+If applicable, update the (https://zenodo.org) DOI tag above after major revisions (Zenodo should automatically register a DOI for each new release).
