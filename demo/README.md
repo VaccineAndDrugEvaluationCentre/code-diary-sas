@@ -2,7 +2,7 @@
 This implementation should in principle work in SAS 9.3 and up.
 
 ## Code Diary
-The script project_main.sas is the main script for the demo.
+The script project_main.sas is the main script for the demo. Example html output (from a rudimentary SAS markdown-to-html converter) can be seen directly [here](https://vaccineanddrugevaluationcentre.github.io/code-diary-sas/)
 The included script generate_documentation.sas is the script that is used to call the relevant macros.
 
 - The use of aliases for sections are meant to keep keywords short where appropriate. Keywords should in principle be limited to 25 characters and start with a letter.
