@@ -5,11 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 ### Added
+### Changed
+### Removed
+
+## [1.0.4] - 2018-05-10
 - Zenodo DOI tag in README.md (and clarify text relating to DOI)
 - GitHub pages example code
 ### Changed
 - Additional section in scrub list
-### Removed
 
 ## [1.0.3] - 2018-05-01
 ### Added
@@ -28,7 +31,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Initial version of code
 - Initial version of demos
 
-[Unreleased]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.3...HEAD
-[1.0.2]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.2...v1.0.3
+[Unreleased]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.3...v1.0.4
+[1.0.3]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/compare/v1.0.0...v1.0.1
