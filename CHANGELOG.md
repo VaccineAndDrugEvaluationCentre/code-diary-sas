@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Zenodo DOI tag in README.md (and clarify text relating to DOI)
 - GitHub pages example code
 ### Changed
+- Additional section in scrub list
 ### Removed
 
 ## [1.0.3] - 2018-05-01
