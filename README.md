@@ -16,5 +16,5 @@ Copy the relevant files from the [**source**](https://github.com/VaccineAndDrugE
 See the files in the [**demo**](https://github.com/VaccineAndDrugEvaluationCentre/code-diary-sas/tree/master/demo) folder for example uses.
 These examples, combined with the documentation in the files themselves, are the user manual.
 
-## DOI
-Cite this using the DOI (see link on top). Zenodo (https://zenodo.org) automatically registers a DOI for each new release and updates the tag above.
+## Citing
+Code Diary has been published as *[From source code to publication: Code Diary, an automatic documentation parser for SAS](https://www.sciencedirect.com/science/article/pii/S2352711018300669)* in SoftwareX, please cite this paper when needed. Zenodo (https://zenodo.org) automatically registers a DOI for each new release (and updates the tag above) if you need a version-specific reference in your implementation.

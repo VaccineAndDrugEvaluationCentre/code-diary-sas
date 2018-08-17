@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## [Unreleased]
 ### Added
 ### Changed
+- Change reference to DOI and add link to manuscript
 ### Removed
 
 ## [1.0.4] - 2018-05-10
