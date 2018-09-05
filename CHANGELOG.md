@@ -7,7 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 ### Changed
 - Change reference to DOI and add link to manuscript
+### Deprecated 
 ### Removed
+### Fixed
+- Added space between markdown header symbol and macro name
+### Security
 
 ## [1.0.4] - 2018-05-10
 ### Added

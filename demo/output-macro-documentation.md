@@ -1,8 +1,8 @@
 % SAS macro and script library
-% February 28, 2017
+% September 5, 2018
 
 #  Demo
-##org_macro_A
+## org_macro_A
 File location: C:\Users\righoltc\Documents\GitHub\code-diary-sas\demo\org_macro_A.sas
 ### Summary
 The A macro, it does everything you could ever wish for.
@@ -17,7 +17,7 @@ Use it wisely
 ### Some other heading
 More fancy text
  
-##org_macro_B
+## org_macro_B
 File location: C:\Users\righoltc\Documents\GitHub\code-diary-sas\demo\org_macro_B.sas
 ### Summary
 Macro B for out glorious institute, it just misses the S.
@@ -34,7 +34,7 @@ Like a macro
 More fancy text
  
 #  Source
-##code_diary
+## code_diary
 File location: C:\Users\righoltc\Documents\GitHub\code-diary-sas\source\code_diary.sas
  
 ### Summary
@@ -181,7 +181,7 @@ sections_scrubbed = work.scrub_list
 Authors: Christiaan Righolt
 Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
  
-##convert_markdown_to_html
+## convert_markdown_to_html
 File location: C:\Users\righoltc\Documents\GitHub\code-diary-sas\source\convert_markdown_to_html.sas
 ### Summary
 Macro to convert a markdown style document to html. This is not supposed to supplant proper tools like pandoc, but only to aid visualization on a closed system that does not allow the installation of software.
@@ -209,7 +209,7 @@ Not supported is:
 Authors: Christiaan Righolt
 Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
  
-##macro_diary
+## macro_diary
 File location: C:\Users\righoltc\Documents\GitHub\code-diary-sas\source\macro_diary.sas
 ### Summary
 Macro to parse documentation for all sas macros and scripts in a root directory.
@@ -226,7 +226,7 @@ See sample_macro_documentation for markup of files.
 Authors: Christiaan Righolt
 Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
  
-##sample_macro_documentation
+## sample_macro_documentation
 File location: C:\Users\righoltc\Documents\GitHub\code-diary-sas\source\sample_macro_documentation.sas
 ### Summary
 This file is a example/template for macro documentation that describes what sections could be included. This documentation is written in markdown.

@@ -183,7 +183,7 @@ Copyright (c) 2016 Vaccine and Drug Evaluation Centre, Winnipeg.
 		select file_no, line_no, source_line as documentation_line
 		from _m_ds_source_comments
 		union
-		select file_no, -2 as line_no, ( strip(file_base_header_level) || strip(file_name) ) as documentation_line
+		select file_no, -2 as line_no, ( strip(file_base_header_level) || " " || strip(file_name) ) as documentation_line
 		from _m_ds_files_with_comments
 		union
 		select file_no, -1 as line_no, ("File location: " || strip(full_file_path)) as documentation_line
